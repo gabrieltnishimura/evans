@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+  <Resource name="arduino/ArduinoConnectionFactory" auth="Container"
+            type="br.com.evans.jndi.basic.ArduinoConnection"
+            factory="br.com.evans.jndi.basic.ArduinoConnectionFactory"/>
+
+  <Resource name="states/DeviceMonitorFactory" auth="Container"
+            type="br.com.evans.jndi.states.DeviceMonitor"
+            factory="br.com.evans.jndi.states.DeviceMonitorFactory"/>
+</Context>
