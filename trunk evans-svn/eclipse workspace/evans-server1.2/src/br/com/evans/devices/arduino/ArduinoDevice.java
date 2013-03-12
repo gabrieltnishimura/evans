@@ -1,4 +1,6 @@
-package br.com.evans.mapping.basic;
+package br.com.evans.devices.arduino;
+
+import br.com.evans.devices.core.DeviceImpl;
 
 /**
  * There will be lots of devices from now on.
@@ -47,51 +49,48 @@ package br.com.evans.mapping.basic;
  * 2) The implementation method should handle a POST from the EletricImp,
  * understanding what kind of info will be transmitted, so data can be 
  * processed correctly
+ * 
  * @author Gcats
  *
  */
-public class Device implements DeviceImpl {
-	private int id;
-	private String rf_code;
-	private boolean status;
+public class ArduinoDevice implements DeviceImpl {
+	private String location;
+	private boolean isOn;
 	
-	/**
-	 * Constructor of Device class
-	 * @todo [id] must make something better than this to order devices
-	 * 
-	 * @param id id of the device, defines the order of the device when shiftregistering. 
-	 * @param rf_code radio frequency code of the device, when sent to arduino it should alter states
-	 * @param status status of the device: whether is on/off
-	 * @param isOutput 
-	 */
-	public Device(int id, boolean status) {
-		this.id = id;
-		this.status = status;
+	public ArduinoDevice(String location, boolean isOn) {
+		this.location = location;
+		this.isOn = isOn;
 	}
 	
-	public int getId() {
-		return id;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	@Override
+	/**
+	 * Returns the device state. It should be possible to 
+	 * query the device so that you get it's current state.
+	 */
 	public boolean getDeviceStatus() {
-		return status;
+		return this.isOn;
 	}
 
 	@Override
 	public void switchStates() {
-		// TODO Auto-generated method stub
-		
+		if (this.isOn) {
+			System.out.println("[STATUS] " + this.location + " was [ON] and changed to [OFF]");
+			this.isOn = false;
+		} else {
+			System.out.println("[STATUS] " + this.location + " was [OFF] and changed to [ON]");
+			this.isOn = true;
+		}
 	}
-
+	
 	@Override
 	public int getInterfaceState() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public String getLocation() {
+		return location;
+	}
+
+
 	
 }
