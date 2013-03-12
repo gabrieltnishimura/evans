@@ -1,4 +1,6 @@
-package br.com.evans.mapping.basic;
+package br.com.evans.devices.x10;
+
+import br.com.evans.devices.core.DeviceImpl;
 
 public class X10Device implements DeviceImpl{
 

@@ -1,4 +1,4 @@
-package br.com.evans.mapping.basic;
+package br.com.evans.devices.core;
 
 public interface DeviceImpl {
 	/**
@@ -12,9 +12,11 @@ public interface DeviceImpl {
 	 * Switch the device state
 	 */
 	public void switchStates();
-	
+
 	/**
 	 * Returns the status of the interfacing device
+	 * @TODO what is the interfacing device? what should I do in
+	 * order to return it's status
 	 * @return
 	 */
 	public int getInterfaceState();
