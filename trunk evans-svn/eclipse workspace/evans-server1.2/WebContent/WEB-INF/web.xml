@@ -20,7 +20,7 @@
 		arduino/ArduinoConnectionFactory
 	</resource-env-ref-name>
 	<resource-env-ref-type>
-		br.com.evans.jndi.basic.ArduinoConnection
+		br.com.evans.jndi.arduino.ArduinoConnection
 	</resource-env-ref-type>
 </resource-env-ref>
 

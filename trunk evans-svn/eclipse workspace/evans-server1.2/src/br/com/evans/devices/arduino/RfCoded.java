@@ -6,14 +6,14 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import br.com.evans.jndi.basic.ArduinoConnection;
+import br.com.evans.jndi.arduino.ArduinoConnection;
 import br.com.evans.jndi.states.DeviceMonitor;
 
 public class RfCoded extends ArduinoDevice {
 	String rfId;
 	
 	public RfCoded(String map_code, boolean isOn, String rfId) {
-		super(map_code, isOn);
+		super(map_code, isOn); //instanciates ArduinoDevice with state and map_code @param
 		this.rfId = rfId;
 	}
 	
@@ -23,10 +23,12 @@ public class RfCoded extends ArduinoDevice {
 		Context initCtx;
     	try {
 			initCtx = new InitialContext();
-			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			Context envCtx = (Context) initCtx.lookup("java:comp/env"); //get java naming context
+			
 			//Get the device monitor so it can change the device state
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
-			deviceMonitor.setOutdated(true);
+			deviceMonitor.setOutdated(true); // notify reverseAjax
+			
 			//Get the arduino Connection so it can send data over serial
 			ArduinoConnection arduino = (ArduinoConnection) envCtx.lookup("arduino/ArduinoConnectionFactory");
 			arduino.writeInOutput(this.rfId); // ending character '_'

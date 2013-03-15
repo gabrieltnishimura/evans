@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 
+import br.com.evans.devices.arduino.ArduinoDevice;
 import br.com.evans.devices.arduino.RfCoded;
 import br.com.evans.jndi.states.DeviceMonitor;
 import br.com.evans.servlets.core.ServletUtilities;
@@ -39,8 +40,9 @@ public class SpeechRecognitionHandling extends HttpServlet {
 			
 			//Get the device monitor so it can change the device state
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
-			RfCoded device = (RfCoded) deviceMonitor.getDevice("test room lights");
-				if (device != null) {    	    			
+			
+			ArduinoDevice device = deviceMonitor.getDevice("test room lights");
+				if (device != null && device instanceof RfCoded) {  // switch states if the hashmap returns a valid RfCoded device
 	        		device.switchStates();
 	        		
 	    			response.setContentType("application/json");
@@ -56,7 +58,7 @@ public class SpeechRecognitionHandling extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String recognitionString = request.getParameter("recognitionString").toLowerCase();
-		System.out.println("[AJAX] " + recognitionString);
+		System.out.println("[AJAX] received: '" + recognitionString + "'");
 		
 		Context initCtx;
 		try {
@@ -65,9 +67,9 @@ public class SpeechRecognitionHandling extends HttpServlet {
 
 			//Get the device monitor so it can change the device state
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
-			RfCoded device = (RfCoded) deviceMonitor.getDevice(recognitionString);
 			
-			if (device != null) {    	    			
+			ArduinoDevice device = deviceMonitor.getDevice("test room lights");
+			if (device != null && device instanceof RfCoded) { // switch states if the hashmap returns a valid RfCoded device
 				device.switchStates();
 				
 				response.setContentType("application/json");

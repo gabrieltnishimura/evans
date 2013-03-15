@@ -20,7 +20,7 @@ public enum DeviceMonitor { // this is a SINGLETON!
 		
 		this.arduinoDevices = new HashMap<Integer, ArduinoDevice>();
 		// maps the house in the format order <-> device
-//		arduinoDevices.put(0, new ShiftRegister("air conditioner", false, 0));
+		arduinoDevices.put(0, new RfCoded("air conditioner", false, "test1_"));
 		arduinoDevices.put(1, new RfCoded("bathroom lights", false, "test2_"));
 		arduinoDevices.put(2, new RfCoded("corridor lights", false, "test3_"));
 		arduinoDevices.put(3, new RfCoded("garden lights", false,   "test4_"));
@@ -40,30 +40,6 @@ public enum DeviceMonitor { // this is a SINGLETON!
 		}
 		return null;
 	}
-	
-//	public int toArduinoShiftRegisterCode() {
-//		String bit = "";
-//		
-//		int[] id = new int[states.size()];
-//		boolean[] status = new boolean[states.size()];
-//		
-//		for(ArduinoDevice each : states.values())
-//		{
-//			id[each.getId()] = each.getId();
-//			status[each.getId()] = each.getDeviceStatus();
-//		}
-//		
-//		Arrays.sort(id);
-//		
-//		for(int i = states.size() - 1; i >= 0; i--) {
-//			if (status[id[i]])
-//				bit += "1";
-//			else
-//				bit += "0";
-//		}
-//		
-//		return Integer.parseInt(bit, 2);
-//	}
 	
 	public boolean isOutdated() {
 		return isOutdated;
