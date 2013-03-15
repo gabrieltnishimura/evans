@@ -1,4 +1,4 @@
-package br.com.evans.jndi.basic;
+package br.com.evans.jndi.arduino;
 
 import java.io.IOException;
 import java.io.InputStream;
