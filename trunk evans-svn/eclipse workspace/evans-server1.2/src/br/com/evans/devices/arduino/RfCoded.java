@@ -17,9 +17,9 @@ public class RfCoded extends ArduinoDevice {
 		this.rfId = rfId;
 	}
 	
-	@Override // implements a rfcoded state switch
+	@Override // implements a rfcoded state switch also
 	public void switchStates() {
-		super.switchStates(); // change states
+		super.switchStates(); // change states as defined in ArduinoDevice
 		Context initCtx;
     	try {
 			initCtx = new InitialContext();

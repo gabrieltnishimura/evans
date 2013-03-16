@@ -30,11 +30,11 @@ jQuery(function($) {
 });
 
 function populateCheckboxes(events) {
+	console.log("--- reverse ajax from JAVA ---");
 	if (typeof events['deviceList'] != 'undefined') {
 		for (var i in events['deviceList']) {
-			var name = events['deviceList'][i]['device_name'];
 			var state = events['deviceList'][i]['state'];
-			$('#logs').append('<span>[device] ' + name + "[" + state + "]" + '</span><br/>');
+			console.log("[device] " + events['deviceList'][i]['device_name'] +  "[" + state + "]");
 			array[i] = state;
 			
 			var checkbox = $(".device"+i).children().children().children('input');
@@ -44,23 +44,15 @@ function populateCheckboxes(events) {
 				checkbox.val('off').removeAttr('checked').iphoneStyle('refresh');
 			}
 		}
-		$('#logs').append('<hr>');
+		console.log("------------------------------");
 	}
 }
 
 function bindChagesDeviceState() { 
-	$('.iPhoneCheckContainer').unbind('click');
+	$('.iPhoneCheckContainer').unbind('touchend');
 	$('.iPhoneCheckContainer').unbind('mousedown');
-	$('.iPhoneCheckContainer').unbind('mouseup');
-	$('.iPhoneCheckContainer').mousedown(function(e) {
-		e.preventDefault();
-		return false;
-	});
-	$('.iPhoneCheckContainer').mouseup(function(e) {
-		e.preventDefault();
-		return false;
-	}); 
-	$('.iPhoneCheckContainer').click(function() {
+	
+	$('.iPhoneCheckContainer').bind("mousedown", function() {
 		var className = $(this).parents('.device_each').attr('class');
 		var explode = className.split(' device_each');
 		var idDevice = explode[0].substring(explode[0].indexOf('device')+6, explode[0].indexOf('device')+7);
@@ -78,6 +70,26 @@ function bindChagesDeviceState() {
 			if (array[idDevice]) { //was on is off now
 				array[idDevice] = false;
 				checkbox.prop('checked', !checkbox.is(':checked')).iphoneStyle('refresh');
+				ajaxSwitchStates(deviceName); 
+			} 
+		}
+	});
+	$('.iPhoneCheckContainer').bind("touchend", function() {
+		var className = $(this).parents('.device_each').attr('class');
+		var explode = className.split(' device_each');
+		var idDevice = explode[0].substring(explode[0].indexOf('device')+6, explode[0].indexOf('device')+7);
+		var deviceName = $('.device'+idDevice).children().children('label').html();
+		
+		var checkbox = $(".device"+idDevice).children().children().children('input');
+		
+		if (checkbox.val() == 'off') { // was off -> gunna be on
+			if (!array[idDevice]) {  // was off is on
+				array[idDevice] = true;
+				ajaxSwitchStates(deviceName); 
+			} 
+		} else {
+			if (array[idDevice]) { //was on is off now
+				array[idDevice] = false;
 				ajaxSwitchStates(deviceName); 
 			} 
 		} 

@@ -35,7 +35,5 @@
        	 	</tr>
        	<% } %>
         </table>
-        <hr>
-        <div id="logs" style="font-family: monospace;"></div>
     </body>
 </html>

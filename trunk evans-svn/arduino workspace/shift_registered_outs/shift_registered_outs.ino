@@ -1,15 +1,13 @@
 #include <VirtualWire.h>
 #include <stdlib.h>
-#include <string.h>
-#define BUTTON_PIN 2
 #define RX_MODULE_PIN 11
 #define TX_MODULE_PIN 13
-#define LATCH_PIN 4
-#define CLOCK_PIN 3
-#define DATA_PIN 2
-#define NDEV 7
+#define LATCH_PIN 4 // shift register
+#define CLOCK_PIN 3 // shift register
+#define DATA_PIN 2 // shift register
+#define NDEV 4 // eight devices
 #define MAX_WORD_LENGTH 40
-
+  
 // SEND & RECEIVE -> when is not sending, it turns into a listener
 // button stuff
 int readingButton;           // the current reading from the input pin
@@ -19,30 +17,25 @@ int previousButton = LOW;    // the previous reading from the input pin
 long time = 0;         // the last time the output pin was toggled
 long debounce = 175;   // the debounce time, increase if the output flickers
 // state
-char *id[NDEV] = {"test1", "test2", "test3", "test4", "test5",  "test6", "test7"};
-int pins[NDEV] = {2, 3, 4, 5, 6, 7, 8}; // 74HC595 pins, from 0 to 7
+//char *id[NDEV] = {"test1", "test3", "test2", "test4", "test5", "test6", "test7", "test8"};
+char *id[NDEV] = {"test1", "test3", "test2", "test4"};
+//boolean on[NDEV] = {false, false, false, false, false, false, false, false};
+boolean on[NDEV] = {false, false, false, false};
 
-boolean on[NDEV] = {false, false, false, false, false, false, true};
 int switchPin = 0; // the pin the output is supposed to switch states
 int led_iterator; // just a counter
 char msg[MAX_WORD_LENGTH]; // for sending messages
 
 void setup()
 {
-    Serial.begin(9600); // only for @locus debug
+    //Serial.begin(9600); // only for @locus debug
     
     //set pins to output so you can control the shift register
     pinMode(LATCH_PIN, OUTPUT);
     pinMode(CLOCK_PIN, OUTPUT);
     pinMode(DATA_PIN, OUTPUT);
-
-    // pins for the button
-    pinMode(BUTTON_PIN, INPUT);
     
-    // multiple outputs
-    for(led_iterator = 0; led_iterator < NDEV; led_iterator++) {
-      pinMode(pins[led_iterator], OUTPUT);
-    }   
+    outputToShiftRegister(); // init shift register
     
     vw_setup(2000);	 // Bits per sec
     vw_set_ptt_inverted(true);        // Required for DR3100
@@ -52,11 +45,7 @@ void setup()
 }
 
 void loop()
-{
-  if (Serial.available() > 0) {    //processing incoming data from serial <- from mainframe
-    Serial.print(shiftRegisterCode());
-  }
-  
+{ 
    if (wasMessageReceived()) {
      switchRelayState();
    }
@@ -65,13 +54,13 @@ void loop()
 void switchRelayState() {
 	// switching pin state so shift register function can work
     if (on[switchPin]) {
-      on[switchPin] = false;
+        on[switchPin] = false;
     } else {
-      on[switchPin] = true;
+        on[switchPin] = true;
     }
-	
-    sendStateMessage(on[switchPin]);
+    
     outputToShiftRegister();
+    sendStateMessage(on[switchPin]);
 }
 
 boolean wasMessageReceived() {
@@ -79,43 +68,28 @@ boolean wasMessageReceived() {
   uint8_t buflen = VW_MAX_MESSAGE_LEN;
   boolean rightString = false;
   
-  if (vw_get_message(buf, &buflen)) {
-     int i;
-     for(led_iterator = 0; led_iterator < NDEV; led_iterator++) {
-       switchPin = led_iterator;
-       if (strlen((char*)buf) != strlen(id[led_iterator])) {
-         rightString = false;
-       } else {
-         rightString = true;
-           for (i = 0; i < strlen((char*)buf); i++) {
-             if ((uint8_t)id[led_iterator][i] != buf[i]) {
-               rightString = false;
-             } // if equals
-           } // iterates through each letter
-           if (rightString) {
-             break;
-           }
-         } // if length is equal
-         
-         if (rightString) {
-             break;
-         }
-       }// iterates through all leds
-  }
+    if (vw_get_message(buf, &buflen)) {
+        int i;
+        for(led_iterator = 0; led_iterator < NDEV; led_iterator++) {
+            switchPin = led_iterator;
+            if (strlen((char*)buf) != strlen(id[led_iterator])) {
+                rightString = false;
+            } else {
+                rightString = true;
+                for (i = 0; i < strlen((char*)buf); i++) {
+                    if ((uint8_t)id[led_iterator][i] != buf[i]) {
+                        rightString = false;
+                    } // if equals
+                } // iterates through each letter
+                if (rightString) {
+                    break;
+                }
+            } // if length is equal
+        if (rightString)
+            break;
+        } // iterates through all leds
+    } // if message received
   return rightString;
-}
-
-boolean wasButtonPressed() {
-  readingButton = digitalRead(BUTTON_PIN);
-  boolean pressed = false;
-  
-  if (readingButton == HIGH && previousButton == LOW && millis() - time > debounce) {
-    time = millis();
-    pressed = true;
-  }
-  
-  previousButton = readingButton;
-  return pressed;
 }
 
 /**
@@ -135,12 +109,12 @@ void outputToShiftRegister() {
  */
 int shiftRegisterCode() {
     int val = 0;
-        for (led_iterator = NDEV - 1; led_iterator >= 0; led_iterator--) {                
+        for (led_iterator = NDEV - 1; led_iterator >= 0; led_iterator--) {
             if (on[led_iterator])
                 val += (1 << (led_iterator)); // bitshift operator
             else
                 val += (0 << (led_iterator)); // bitshift operator
-        }
+    }
     return val;
 }
 
@@ -153,8 +127,9 @@ void sendStateMessage(boolean state) {
 	    strcat(msg, "-ON-_");
 	else
 	    strcat(msg, "-OFF-_");
-  
+
 	vw_send((uint8_t *)msg, strlen(msg)); // send the message
 	vw_wait_tx(); // wait until all message is gone
+
 	vw_rx_start(); // start listening so that it can receive messages
 }
