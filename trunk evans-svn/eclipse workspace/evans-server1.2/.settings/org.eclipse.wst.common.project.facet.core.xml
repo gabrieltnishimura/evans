@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faceted-project>
-  <runtime name="evans Tomcat 7 Server at localhost"/>
+  <runtime name="E.V.A.N.S. Tomcat 7.0.37"/>
   <fixed facet="java"/>
   <fixed facet="wst.jsdt.web"/>
   <fixed facet="jst.web"/>

@@ -68,8 +68,9 @@ public class SpeechRecognitionHandling extends HttpServlet {
 			//Get the device monitor so it can change the device state
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
 			
-			ArduinoDevice device = deviceMonitor.getDevice("test room lights");
+			ArduinoDevice device = deviceMonitor.getDevice(recognitionString);
 			if (device != null && device instanceof RfCoded) { // switch states if the hashmap returns a valid RfCoded device
+				System.out.println("[STATUS]: device exists, switching it's state");
 				device.switchStates();
 				
 				response.setContentType("application/json");

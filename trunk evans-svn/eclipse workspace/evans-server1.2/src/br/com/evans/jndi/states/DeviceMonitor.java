@@ -24,9 +24,9 @@ public enum DeviceMonitor { // this is a SINGLETON!
 		arduinoDevices.put(1, new RfCoded("bathroom lights", false, "test2_"));
 		arduinoDevices.put(2, new RfCoded("corridor lights", false, "test3_"));
 		arduinoDevices.put(3, new RfCoded("garden lights", false,   "test4_"));
-		arduinoDevices.put(4, new RfCoded("kitchen lights", false, "test5_"));
-		arduinoDevices.put(5, new RfCoded("room secondary lights", false, "test6_"));
-		arduinoDevices.put(6, new RfCoded("test lights", false, "test_7"));
+//		arduinoDevices.put(4, new RfCoded("kitchen lights", false, "test5_"));
+//		arduinoDevices.put(5, new RfCoded("room secondary lights", false, "test6_"));
+//		arduinoDevices.put(6, new RfCoded("test lights", false, "test_7"));
 		arduinoDevices.put(7, new RfCoded("test room lights", false, "o_"));
 		this.isOutdated = false;
 	}
