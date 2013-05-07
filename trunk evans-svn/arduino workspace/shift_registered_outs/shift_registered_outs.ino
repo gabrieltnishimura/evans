@@ -18,7 +18,8 @@ long time = 0;         // the last time the output pin was toggled
 long debounce = 175;   // the debounce time, increase if the output flickers
 // state
 //char *id[NDEV] = {"test1", "test3", "test2", "test4", "test5", "test6", "test7", "test8"};
-char *id[NDEV] = {"test1", "test3", "test2", "test4"};
+char *id_off[NDEV] = {"a", "b", "c", "d"};
+char *id_on[NDEV] = {"A", "B", "C", "D"};
 //boolean on[NDEV] = {false, false, false, false, false, false, false, false};
 boolean on[NDEV] = {false, false, false, false};
 
