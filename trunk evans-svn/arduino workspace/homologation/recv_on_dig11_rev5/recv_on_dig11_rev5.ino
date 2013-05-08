@@ -1,6 +1,6 @@
 #include <VirtualWire.h>
 #define BUTTON_PIN 2
-#define RX_MODULE_PIN 11
+#define RX_MODULE_PIN 10
 #define TX_MODULE_PIN 13
 #define NDEV 4
 
@@ -8,11 +8,17 @@
  * As the mainframe is now sending messages 
  * telling the appliance to switch whether 
  * on or off, implementation of a new 
- * message identifier had to be done. 
- * In R5, major changes to wasMessageReceived 
- * and the loop structure was modified a bit as
- * well, aand, added message feedback. */
-
+ * message protocol had to be designed. 
+ * In R5, major changes to wasMessageReceived, 
+ * modifications in the loop structure and 
+ * added message feedback. As now it should be 
+ * a half-duplex communication. The problem is
+ * that different frequencies need to be used
+ * in order to prevent interference of rf 
+ * sending and receiving waves. Either way, 
+ * tests needs to be done. Maybe adding a 
+ * little delay before I send the feedback message 
+ * can workaround destructive interference. */
 
 // button stuff
 int readingButton;           // the current reading from the input pin
@@ -30,15 +36,16 @@ int pins[NDEV] = {2, 3, 4, 5};
 boolean on[NDEV] = {false, false, false, false};
 int switchPin = 0;
 int led_iterator;
+char msg[1]; // for sending messages
 
 void setup()
 {
     pinMode(BUTTON_PIN, INPUT);
     
-    // multiple outputs
+    // multiple outputs - iterates through all NDEVices
     for(led_iterator = 0; led_iterator < NDEV; led_iterator++) {
       pinMode(pins[led_iterator], OUTPUT);
-    }   
+    }
     
     vw_setup(2000);	 // Bits per sec
     vw_set_rx_pin(RX_MODULE_PIN);
@@ -116,11 +123,16 @@ boolean wasButtonPressed()
 
 void sendStateMessage(boolean state)
 {
+  	vw_rx_stop(); // stop listening so that it can send messages
+
 	if (state) {
 		strcpy(msg, feedback[switchPin]); // sends the next char
 	} else {
 		strcpy(msg, feedback[switchPin + 1]);
 	}
-	vw_send((uint8_t *)msg, strlen(msg));
-	vw_wait_tx();
+	vw_send((uint8_t *)msg, strlen(msg)); // send the message
+	vw_wait_tx(); // wait until all message is gone
+
+	vw_rx_start(); // start listening so that it can receive messages
+
 }
