@@ -24,7 +24,7 @@ public enum ArduinoConnection implements SerialPortEventListener {
 	SerialPort serialPort;
         /** The port we're normally going to use. */
 	String PORT_NAMES[] = { 
-			"COM6" // Windows
+			"COM3" // Windows
 			};
 	/** Buffered input stream from the port */
 	InputStream input;
