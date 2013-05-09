@@ -1,24 +1,18 @@
 #include <VirtualWire.h>
 #define BUTTON_PIN 2
-#define RX_MODULE_PIN 10
+#define RX_MODULE_PIN 11
 #define TX_MODULE_PIN 13
 #define NDEV 4
 
 /** R5 uses somewhat a new concept. 
- * As the mainframe is now sending messages 
- * telling the appliance to switch whether 
- * on or off, implementation of a new 
- * message protocol had to be designed. 
- * In R5, major changes to wasMessageReceived, 
- * modifications in the loop structure and 
- * added message feedback. As now it should be 
- * a half-duplex communication. The problem is
- * that different frequencies need to be used
- * in order to prevent interference of rf 
- * sending and receiving waves. Either way, 
- * tests needs to be done. Maybe adding a 
- * little delay before I send the feedback message 
- * can workaround destructive interference. */
+ * As the mainframe is now sending messages telling the appliance to switch whether 
+ * on or off, implementation of a new  message protocol had to be designed. 
+ * In R5, major changes to wasMessageReceived, modifications in the loop structure and 
+ * added message feedback. As now it should be a half-duplex communication. The problem is
+ * that different frequencies need to be used in order to prevent interference of rf 
+ * sending and receiving waves. Either way, tests needs to be done. Maybe adding a 
+ * little delay before I send the feedback message can workaround destructive interference. 
+ * Half-duplex communication tested and working unstable, need to optimize code. */
 
 // button stuff
 int readingButton;           // the current reading from the input pin
@@ -27,10 +21,11 @@ int previousButton = LOW;    // the previous reading from the input pin
 // random stuff
 long time = 0;         // the last time the output pin was toggled
 long debounce = 175;   // the debounce time, increase if the output flickers
+
 // state
 char *id_off[NDEV] = {"a", "c", "e", "g"};
 char *feedback[NDEV*2] = {"B", "b", "D", "d", "F", "f", "H", "h"};
-char *id_on[NDEV] = {"A", "B", "C", "D"};
+char *id_on[NDEV] = {"A", "C", "E", "G"};
 int pins[NDEV] = {2, 3, 4, 5};
 
 boolean on[NDEV] = {false, false, false, false};
@@ -45,9 +40,11 @@ void setup()
     // multiple outputs - iterates through all NDEVices
     for(led_iterator = 0; led_iterator < NDEV; led_iterator++) {
       pinMode(pins[led_iterator], OUTPUT);
+      digitalWrite(pins[switchPin], LOW);
     }
-    
+
     vw_setup(2000);	 // Bits per sec
+    vw_set_ptt_inverted(true);        // Required for DR3100
     vw_set_rx_pin(RX_MODULE_PIN);
     vw_set_tx_pin(TX_MODULE_PIN);
     vw_rx_start();
@@ -69,7 +66,8 @@ void switchRelayState()
       digitalWrite(pins[switchPin], HIGH);
       on[switchPin] = true;
     }
-	sendStateMessage(on[switchPin]); // since it's changed states already, why not report to the mainframe
+    delay(300);
+    sendStateMessage(on[switchPin]); // since it's changed states already, why not report to the mainframe
 }
 
 boolean wasMessageReceived()
@@ -81,22 +79,25 @@ boolean wasMessageReceived()
 	if (vw_get_message(buf, &buflen)) {
 		for(led_iterator = 0; led_iterator < NDEV; led_iterator++) {
 			switchPin = led_iterator;
-			if (strlen((char*)buf) != 1) { // received message length must be 1
-			 rightString = false;
+			if (strlen((char*)buf) != strlen(id_on[led_iterator])) {
+			    rightString = false;
 			} else {
-				rightString = true;
+		            rightString = true;
+                            int i;
+                            for (i = 0; i < strlen((char*)buf); i++) {
 				if (on[led_iterator]) { // if is on, see if it commands to switch off
-					if ((uint8_t)id_off[led_iterator][0] != buf[0]) {
+					if ((uint8_t)id_off[led_iterator][i] != buf[i]) {
 						rightString = false;
 					} // if equals
 				} else { // if is off, see if it commands to switch on
-					if ((uint8_t)id_on[led_iterator][0] != buf[0]) {
+					if ((uint8_t)id_on[led_iterator][i] != buf[i]) {
 						rightString = false;
 					} // if equals
 				}
-				if (rightString) {
-					break;
-				}
+                            }
+                            if (rightString) {
+			        break;
+		            }
 			} // if length is equal
 			 
 			if (rightString) {
@@ -134,5 +135,5 @@ void sendStateMessage(boolean state)
 	vw_wait_tx(); // wait until all message is gone
 
 	vw_rx_start(); // start listening so that it can receive messages
-
+        vw_wait_rx();
 }

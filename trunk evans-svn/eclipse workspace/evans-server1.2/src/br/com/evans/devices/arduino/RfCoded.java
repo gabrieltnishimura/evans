@@ -31,7 +31,11 @@ public class RfCoded extends ArduinoDevice {
 			
 			//Get the arduino Connection so it can send data over serial
 			ArduinoConnection arduino = (ArduinoConnection) envCtx.lookup("arduino/ArduinoConnectionFactory");
-			arduino.writeInOutput(this.rfId); // ending character '_'
+			if (this.getDeviceStatus()) {
+				arduino.writeInOutput(this.rfId.toUpperCase() + "_"); // ending character '_'
+			} else {
+				arduino.writeInOutput(this.rfId.toLowerCase() + "_"); // ending character '_'
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NamingException e) {

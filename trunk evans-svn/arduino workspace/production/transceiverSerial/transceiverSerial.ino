@@ -11,8 +11,11 @@
 int readingButton;           // the current reading from the input pin
 int previousButton = LOW;    // the previous reading from the input pin
 long time = 0;               // the last time the output pin was toggled
-long debounce = 200;         // the debounce time, increase if the output flickers
+long debounce = 250;         // the debounce time, increase if the output flickers
 int state = HIGH;            // the current state of the output pin
+
+long timeLastSent = 0;
+long debounceTransmitter = 50;
 
 char myChar;
 char curChar;
@@ -48,25 +51,29 @@ void loop() {
     }
 
     if (endedSerial) {
-        Serial.print("rf_send="+roomCode);
+        //Serial.println("snd="+roomCode);
 	roomCode.toCharArray(msg, roomCode.length() + 1);
         sendMessage(msg);
 	roomCode = "";
         endedSerial = false;
     }
 	
-    //if (wasMessageReceived() && !endedSerial) { // if the arduino received something
-    //    sendMessage("o");
-    //}
+    if (wasMessageReceived() && !vx_tx_active()) { // if the arduino received something
+        sendMessage("o");
+    }
 }
 
 void sendMessage(char msg[MAX_WORD_LENGTH]) {
-    vw_rx_stop();
-	
-    vw_send((uint8_t *)msg, strlen(msg));
-    vw_wait_tx();
-	
-    vw_rx_start();
+    if (millis() - timeLastSent > debounceTransmitter) {
+        timeLastSent = millis();
+        vw_rx_stop();
+        vw_send((uint8_t *)msg, strlen(msg));
+        
+        vw_wait_tx();
+        vw_rx_start();
+    } // else output would flicker (2 messages with the same meaning) - but it doesn't matter! because 
+    // changes were made to the identification of the appliances -> uppercase words and lowercase words,
+    // so after correcting patches are deployed this if can be stripped of the code
 }
 
 boolean wasButtonPressed() {
@@ -87,6 +94,8 @@ boolean wasMessageReceived() {
     uint8_t buflen = VW_MAX_MESSAGE_LEN;
 
     if (vw_get_message(buf, &buflen)) { // received a message
+        Serial.print("rcv=");
+        Serial.println((char*)buf);
         sendMessage("o");
     }
 }

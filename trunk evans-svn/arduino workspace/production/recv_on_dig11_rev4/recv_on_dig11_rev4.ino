@@ -73,21 +73,21 @@ boolean wasMessageReceived() {
 				Serial.print("Received: '");Serial.print((char*)buf);Serial.print("'");
 				Serial.print("--------------------");
 				Serial.print("Length: '");Serial.print(strlen((char*)buf));;Serial.print("'");
-				Serial.print("Length: '");Serial.print(strlen(id[led_iterator]));;Serial.print("'");
-				Serial.print("Compare with: '");Serial.print((char*)id[led_iterator]);;Serial.print("'");
+				Serial.print("Length: '");Serial.print(strlen(id_on[led_iterator]));;Serial.print("'");
+				Serial.print("Compare with: '");Serial.print((char*)id_on[led_iterator]);;Serial.print("'");
 				Serial.println("");
 			}
-			if (strlen((char*)buf) != strlen(id[led_iterator])) {
+			if (strlen((char*)buf) != strlen(id_on[led_iterator])) {
 			 rightString = false;
 			} else {
 				rightString = true;
 				for (i = 0; i < strlen((char*)buf); i++) {
 					if (debug) {
-						Serial.print((uint8_t)id[led_iterator][i]);
+						Serial.print((uint8_t)id_on[led_iterator][i]);
 						Serial.print("vs");Serial.print(buf[i]);
 						Serial.println("");
 					}
-					if ((uint8_t)id[led_iterator][i] != buf[i]) {
+					if ((uint8_t)id_on[led_iterator][i] != buf[i]) {
 						rightString = false;
 					} // if equals
 				} // iterates through each letter
