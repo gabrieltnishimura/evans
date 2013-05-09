@@ -20,14 +20,15 @@ public enum DeviceMonitor { // this is a SINGLETON!
 		
 		this.arduinoDevices = new HashMap<Integer, ArduinoDevice>();
 		// maps the house in the format order <-> device
-		arduinoDevices.put(0, new RfCoded("air conditioner", false, "test1_"));
-		arduinoDevices.put(1, new RfCoded("bathroom lights", false, "test2_"));
-		arduinoDevices.put(2, new RfCoded("corridor lights", false, "test3_"));
-		arduinoDevices.put(3, new RfCoded("garden lights", false,   "test4_"));
-//		arduinoDevices.put(4, new RfCoded("kitchen lights", false, "test5_"));
-//		arduinoDevices.put(5, new RfCoded("room secondary lights", false, "test6_"));
-//		arduinoDevices.put(6, new RfCoded("test lights", false, "test_7"));
-		arduinoDevices.put(7, new RfCoded("test room lights", false, "o_"));
+		arduinoDevices.put(0, new RfCoded("air conditioner", false, "test1"));
+		arduinoDevices.put(1, new RfCoded("bathroom lights", false, "test2"));
+		arduinoDevices.put(2, new RfCoded("corridor lights", false, "test3"));
+		arduinoDevices.put(3, new RfCoded("garden lights", false,   "test4"));
+		arduinoDevices.put(4, new RfCoded("kitchen lights", false, "a"));
+		arduinoDevices.put(5, new RfCoded("room secondary lights", false, "c"));
+		arduinoDevices.put(6, new RfCoded("test lights", false, "e"));
+		arduinoDevices.put(6, new RfCoded("test lights", false, "g"));
+		arduinoDevices.put(7, new RfCoded("test room lights", false, "o"));
 		this.isOutdated = false;
 	}
 	
