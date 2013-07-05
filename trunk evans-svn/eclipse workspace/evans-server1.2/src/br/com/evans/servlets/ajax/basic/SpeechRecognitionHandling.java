@@ -8,9 +8,8 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-
-import br.com.evans.devices.arduino.ArduinoDevice;
 import br.com.evans.devices.arduino.RfCoded;
+import br.com.evans.devices.core.Device;
 import br.com.evans.jndi.states.DeviceMonitor;
 import br.com.evans.servlets.core.ServletUtilities;
 import net.sf.json.JSONException;
@@ -41,9 +40,10 @@ public class SpeechRecognitionHandling extends HttpServlet {
 			//Get the device monitor so it can change the device state
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
 			
-			ArduinoDevice device = deviceMonitor.getDevice("test room lights");
+			Device device = deviceMonitor.getDevice("room");
 				if (device != null && device instanceof RfCoded) {  // switch states if the hashmap returns a valid RfCoded device
-	        		device.switchStates();
+	        		device.switchStates(); // since it's not certain that the device will really switch states, wait for serial return
+	        		// if it doesn't come, try to switch states again
 	        		
 	    			response.setContentType("application/json");
 	    			response.getWriter().write(deviceMonitor.createJsonMap());
@@ -68,11 +68,11 @@ public class SpeechRecognitionHandling extends HttpServlet {
 			//Get the device monitor so it can change the device state
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
 			
-			ArduinoDevice device = deviceMonitor.getDevice(recognitionString);
+			Device device = deviceMonitor.getDevice(recognitionString);
 			if (device != null && device instanceof RfCoded) { // switch states if the hashmap returns a valid RfCoded device
 				System.out.println("[STATUS]: device exists, switching it's state");
 				device.switchStates();
-				
+
 				response.setContentType("application/json");
 				response.getWriter().write(deviceMonitor.createJsonMap());
 			}

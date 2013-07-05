@@ -50,6 +50,20 @@ public class ReverseAjax extends HttpServlet {
 							asyncContext.complete();
 							deviceMonitor.setOutdated(false);
 						}
+	    			} else if (deviceMonitor.hadSerialAnswer()) {
+						while (!asyncContexts.isEmpty()) {
+							String devicesState = deviceMonitor.createJsonMap();
+							
+							AsyncContext asyncContext = asyncContexts.poll();
+							HttpServletResponse peer = (HttpServletResponse) asyncContext.getResponse();
+
+							System.out.println("[REVERSE AJAX] " + devicesState);
+							peer.getWriter().write(devicesState);
+							peer.setStatus(HttpServletResponse.SC_OK);
+							peer.setContentType("application/json");
+							asyncContext.complete();
+							deviceMonitor.setSerialAnswer(false);
+						}
 	    			}
 				} catch (IOException e) {
 					throw new RuntimeException(e.getMessage(), e);

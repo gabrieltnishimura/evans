@@ -5,6 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+import br.com.evans.jndi.states.DeviceMonitor;
+
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
@@ -112,7 +117,18 @@ public enum ArduinoConnection implements SerialPortEventListener {
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				System.out.println("[SERIAL] Received from arduino: '" + new String(this.read(16)) + "'");
+				String received = new String(this.read(16));
+				received = received.substring(0, received.length() - 2);
+				System.out.println("[SERIAL] Received from arduino: '" + received + "'");
+				
+				Context initCtx = new InitialContext();
+    			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    			
+    			//received data from serial - a device changed states
+    			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
+    			deviceMonitor.setSerialAnswer(true);
+    			deviceMonitor.setFeedback(received.substring(received.length() - 1, received.length()));
+    			System.out.println("[STATUS] Setting feedback from serial as '"+received+"'");
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
@@ -122,7 +138,7 @@ public enum ArduinoConnection implements SerialPortEventListener {
 	
 	public byte[] read(int intWaitTime) throws IOException {
 
-        try {
+        try { /* wait until transmission has ended*/
             Thread.sleep(intWaitTime);
         } catch (InterruptedException ex) {
         	System.out.println("Exception on thread sleeping");

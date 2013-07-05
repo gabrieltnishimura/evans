@@ -1,8 +1,8 @@
 package br.com.evans.devices.x10;
 
-import br.com.evans.devices.core.DeviceImpl;
+import br.com.evans.devices.core.Device;
 
-public class X10Device implements DeviceImpl{
+public class X10Device implements Device{
 
 	@Override
 	public boolean getDeviceStatus() {
@@ -20,6 +20,12 @@ public class X10Device implements DeviceImpl{
 	public int getInterfaceState() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public String getLocation() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

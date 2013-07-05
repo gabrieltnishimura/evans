@@ -1,6 +1,6 @@
 package br.com.evans.devices.core;
 
-public interface DeviceImpl {
+public interface Device {
 	/**
 	 * Returns whether the device is on or off,
 	 * Using a method to be defined
@@ -20,4 +20,11 @@ public interface DeviceImpl {
 	 * @return
 	 */
 	public int getInterfaceState();
+	
+	/**
+	 * Returns the location of the devices
+	 * @return location String
+	 */
+	public String getLocation();
+	
 }

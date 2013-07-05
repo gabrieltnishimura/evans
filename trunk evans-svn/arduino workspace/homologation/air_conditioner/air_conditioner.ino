@@ -42,7 +42,9 @@
  * Word 13	:
  * Word 14	:
  * Word 15	:
- * Word 16	:*/
+ * Word 16	:
+ * Structure: Function that outputs to led pin, and function that creates an coded array 
+ */
  
 
 // button stuff
