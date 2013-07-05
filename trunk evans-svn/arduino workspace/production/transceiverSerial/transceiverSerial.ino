@@ -59,7 +59,7 @@ void loop() {
     }
 	
     if (wasMessageReceived() && !vx_tx_active()) { // if the arduino received something
-        sendMessage("o");
+        //sendMessage("o");
     }
 }
 
@@ -71,8 +71,8 @@ void sendMessage(char msg[MAX_WORD_LENGTH]) {
         
         vw_wait_tx();
         vw_rx_start();
-    } // else output would flicker (2 messages with the same meaning) - but it doesn't matter! because 
-    // changes were made to the identification of the appliances -> uppercase words and lowercase words,
+    } // else output would flicker (2 messages with the same meaning) - notice it won't matter anymore.
+    // Changes were made to the identification of the appliances -> uppercase words and lowercase words,
     // so after correcting patches are deployed this if can be stripped of the code
 }
 
@@ -95,7 +95,6 @@ boolean wasMessageReceived() {
 
     if (vw_get_message(buf, &buflen)) { // received a message
         Serial.print("rcv=");
-        Serial.println((char*)buf);
-        sendMessage("o");
+        Serial.println((char*)buf); // somehow buffer has one extra '/n'
     }
 }

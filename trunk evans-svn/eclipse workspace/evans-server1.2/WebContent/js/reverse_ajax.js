@@ -37,11 +37,13 @@ function populateCheckboxes(events) {
 			console.log("[device] " + events['deviceList'][i]['device_name'] +  "[" + state + "]");
 			array[i] = state;
 			
-			var checkbox = $(".device"+i).children().children().children('input');
+			var checkbox = $(".device"+i).children().children().children('input');	
 			if (state) {
 				checkbox.val('on').attr('checked', 'checked').iphoneStyle('refresh');
+				checkbox.change();
 			} else {
 				checkbox.val('off').removeAttr('checked').iphoneStyle('refresh');
+				checkbox.change();
 			}
 		}
 		console.log("------------------------------");
@@ -63,16 +65,15 @@ function bindChagesDeviceState() {
 		if (checkbox.val() == 'off') { // was off -> gunna be on
 			if (!array[idDevice]) {  // was off is on
 				array[idDevice] = true;
-				checkbox.prop('checked', !checkbox.is(':checked')).iphoneStyle('refresh');
 				ajaxSwitchStates(deviceName); 
 			} 
 		} else {
 			if (array[idDevice]) { //was on is off now
 				array[idDevice] = false;
-				checkbox.prop('checked', !checkbox.is(':checked')).iphoneStyle('refresh');
 				ajaxSwitchStates(deviceName); 
 			} 
 		}
+		checkbox.prop('checked', !checkbox.is(':checked')).iphoneStyle('refresh'); // this visualy changes state
 	});
 	$('.iPhoneCheckContainer').bind("touchend", function() {
 		var className = $(this).parents('.device_each').attr('class');

@@ -1,6 +1,6 @@
 package br.com.evans.devices.arduino;
 
-import br.com.evans.devices.core.DeviceImpl;
+import br.com.evans.devices.core.Device;
 
 /**
  * There will be lots of devices from now on.
@@ -53,7 +53,7 @@ import br.com.evans.devices.core.DeviceImpl;
  * @author Gcats
  *
  */
-public class ArduinoDevice implements DeviceImpl {
+public class ArduinoDevice implements Device {
 	private String location;
 	private boolean isOn;
 	
@@ -90,7 +90,5 @@ public class ArduinoDevice implements DeviceImpl {
 	public String getLocation() {
 		return location;
 	}
-
-
 	
 }

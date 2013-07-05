@@ -11,10 +11,12 @@ import br.com.evans.jndi.states.DeviceMonitor;
 
 public class RfCoded extends ArduinoDevice {
 	String rfId;
+	String feedbackId;
 	
-	public RfCoded(String map_code, boolean isOn, String rfId) {
+	public RfCoded(String map_code, boolean isOn, String rfId, String feedbackId) {
 		super(map_code, isOn); //instanciates ArduinoDevice with state and map_code @param
 		this.rfId = rfId;
+		this.setFeedbackId(feedbackId);
 	}
 	
 	@Override // implements a rfcoded state switch also
@@ -27,15 +29,33 @@ public class RfCoded extends ArduinoDevice {
 			
 			//Get the device monitor so it can change the device state
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
-			deviceMonitor.setOutdated(true); // notify reverseAjax
-			
 			//Get the arduino Connection so it can send data over serial
 			ArduinoConnection arduino = (ArduinoConnection) envCtx.lookup("arduino/ArduinoConnectionFactory");
+			
 			if (this.getDeviceStatus()) {
-				arduino.writeInOutput(this.rfId.toUpperCase() + "_"); // ending character '_'
+				arduino.writeInOutput(this.rfId.toUpperCase() + "_");
 			} else {
-				arduino.writeInOutput(this.rfId.toLowerCase() + "_"); // ending character '_'
+				arduino.writeInOutput(this.rfId.toLowerCase() + "_");
 			}
+			System.out.println("Switching states in child class - fuck");
+			
+			/* in case the system is waiting for the feedback
+			while(!deviceMonitor.hadSerialAnswer()) {
+				if (this.getDeviceStatus()) {
+					arduino.writeInOutput(this.rfId.toUpperCase() + "_");
+				} else {
+					arduino.writeInOutput(this.rfId.toLowerCase() + "_");
+				}
+				
+				try {
+				    Thread.sleep(1000);
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
+			}*/
+			
+			deviceMonitor.setOutdated(true); // notify reverseAjax
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NamingException e) {
@@ -44,4 +64,31 @@ public class RfCoded extends ArduinoDevice {
 		}
 	}
 
+	public String getFeedbackId() {
+		return feedbackId;
+	}
+
+	public void setFeedbackId(String feedbackId) {
+		this.feedbackId = feedbackId;
+	}
+
+	//TODO alter program structure so it has no repeated code 
+	public void switchStatesFromFeedBack() {
+		super.switchStates();
+		Context initCtx;
+    	try {
+			initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env"); //get java naming context
+			
+			//Get the device monitor so it can change the device state
+			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
+			deviceMonitor.setSerialAnswer(false);
+			deviceMonitor.setOutdated(true); // notify reverseAjax
+			
+		} catch (NamingException e) {
+        	System.out.println("[EXCEPTION] Problem when trying to load the context of ArduinoFactory or DeviceMonitorFactory");
+			e.printStackTrace();
+		}
+	}
+	
 }
