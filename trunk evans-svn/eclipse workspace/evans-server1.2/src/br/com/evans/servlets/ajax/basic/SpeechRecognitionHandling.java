@@ -45,7 +45,7 @@ public class SpeechRecognitionHandling extends HttpServlet {
 	        		device.switchStates(); // since it's not certain that the device will really switch states, wait for serial return
 	        		// if it doesn't come, try to switch states again
 	        		
-	    			response.setContentType("application/json");
+	    			response.setContentType("text");
 	    			response.getWriter().write(deviceMonitor.createJsonMap());
 				}
         } catch (NamingException e) {
@@ -56,7 +56,6 @@ public class SpeechRecognitionHandling extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		String recognitionString = request.getParameter("recognitionString").toLowerCase();
 		System.out.println("[AJAX] received: '" + recognitionString + "'");
 		

@@ -29,7 +29,7 @@ public enum DeviceMonitor { // this is a SINGLETON!
 		arduinoDevices.put(3, new RfCoded("garden lights", false,   "test4", "test"));*/
 		devices.put(4, new RfCoded("kitchen", false, "a", "b"));
 		devices.put(5, new RfCoded("bedside", false, "c", "d"));
-		devices.put(6, new RfCoded("test", false, "e", "f"));
+		devices.put(6, new RfCoded("doorside", false, "e", "f"));
 		devices.put(7, new RfCoded("bathroom", false, "g", "h"));
 		devices.put(8, new RfCoded("room", false, "o", "p"));
 		this.isOutdated = false;
