@@ -35,7 +35,7 @@ public enum DeviceMonitor { // this is a SINGLETON!
 		this.isOutdated = false;
 		this.serialAnswer = false;
 		
-		this.serialMonitor = new SerialAnswerMonitor();
+		this.serialMonitor = new SerialAnswerMonitor(); // wait for changes in serial feedback
 	}
 	
 	public Device getDevice(String mapLocation) {

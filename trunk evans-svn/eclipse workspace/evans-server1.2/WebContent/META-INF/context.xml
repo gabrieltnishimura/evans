@@ -7,4 +7,9 @@
   <Resource name="states/DeviceMonitorFactory" auth="Container"
             type="br.com.evans.jndi.states.DeviceMonitor"
             factory="br.com.evans.jndi.states.DeviceMonitorFactory"/>
+            
+<Resource name="music/MusicPlayerFactory" auth="Container"
+            type="br.com.evans.jdni.music.MusicPlayer"
+            factory="br.com.evans.jdni.music.MusicPlayerFactory"/>
+            
 </Context>

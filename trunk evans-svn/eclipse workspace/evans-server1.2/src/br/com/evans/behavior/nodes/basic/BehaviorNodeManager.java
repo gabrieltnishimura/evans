@@ -1,4 +1,4 @@
-package br.com.evans.speech.nodes.basic;
+package br.com.evans.behavior.nodes.basic;
 
 /**
  * This class manages nodes. For example on which node the user is

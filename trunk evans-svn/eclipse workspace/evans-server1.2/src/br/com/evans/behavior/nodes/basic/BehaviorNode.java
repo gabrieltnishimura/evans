@@ -1,11 +1,11 @@
-package br.com.evans.speech.nodes.basic;
+package br.com.evans.behavior.nodes.basic;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Every time the user enters a node [using ajax]
- * here 
+ * it should return the info to navigate to child nodes
  * @author Gabriel
  *
  */
@@ -30,7 +30,5 @@ public class BehaviorNode {
 	public void setChildNodes(List<BehaviorNode> childNodes) {
 		this.childNodes = childNodes;
 	}
-	
-	
 	
 }
