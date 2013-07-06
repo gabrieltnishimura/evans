@@ -36,4 +36,16 @@
 	</resource-env-ref-type>
 </resource-env-ref>
 
+<resource-env-ref>
+	<description>
+		Factory for EVANS Music Player
+	</description>
+	<resource-env-ref-name>
+		music/MusicPlayerFactory
+	</resource-env-ref-name>
+	<resource-env-ref-type>
+		br.com.evans.jdni.music.MusicPlayer
+	</resource-env-ref-type>
+</resource-env-ref>
+
 </web-app>

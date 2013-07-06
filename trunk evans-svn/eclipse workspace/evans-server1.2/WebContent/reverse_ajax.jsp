@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="br.com.evans.jndi.states.DeviceMonitor"%>
-<%@page import="br.com.evans.devices.arduino.ArduinoDevice"%>
+<%@page import="br.com.evans.devices.core.Device"%>
 <%@page import="javax.naming.Context"%>
 <%@page import="javax.naming.InitialContext"%>
 <%@page import="javax.naming.NamingException"%>
@@ -21,7 +21,7 @@
 		
 		//Get the device monitor so it can get device states
 		DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
-		TreeMap<Integer, ArduinoDevice> tree = deviceMonitor.getStatesTreeMap();
+		TreeMap<Integer, Device> tree = deviceMonitor.getStatesTreeMap();
 		Object[] keySet = tree.navigableKeySet().toArray();
         %>
         
