@@ -1,51 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app 
-    xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-    version="3.0">
-    
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
   <display-name>evans-server1.2</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
-
-<resource-env-ref>
-	<description>
+  <resource-env-ref>
+    <description>
 		Factory for the Arduino Connection
 	</description>
-	<resource-env-ref-name>
+    <resource-env-ref-name>
 		arduino/ArduinoConnectionFactory
 	</resource-env-ref-name>
-	<resource-env-ref-type>
+    <resource-env-ref-type>
 		br.com.evans.jndi.arduino.ArduinoConnection
 	</resource-env-ref-type>
-</resource-env-ref>
-
-<resource-env-ref>
-	<description>
+  </resource-env-ref>
+  <resource-env-ref>
+    <description>
 		Factory for EVANS Device Monitor
 	</description>
-	<resource-env-ref-name>
+    <resource-env-ref-name>
 		states/DeviceMonitorFactory
 	</resource-env-ref-name>
-	<resource-env-ref-type>
+    <resource-env-ref-type>
 		br.com.evans.jndi.states.DeviceMonitor
 	</resource-env-ref-type>
-</resource-env-ref>
-
-<resource-env-ref>
-	<description>
+  </resource-env-ref>
+  <resource-env-ref>
+    <description>
 		Factory for EVANS Music Player
 	</description>
-	<resource-env-ref-name>
+    <resource-env-ref-name>
 		music/MusicPlayerFactory
 	</resource-env-ref-name>
-	<resource-env-ref-type>
+    <resource-env-ref-type>
 		br.com.evans.jdni.music.MusicPlayer
 	</resource-env-ref-type>
-</resource-env-ref>
-
+  </resource-env-ref>
 </web-app>

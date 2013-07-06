@@ -37,7 +37,6 @@ public class RfCoded extends ArduinoDevice {
 			} else {
 				arduino.writeInOutput(this.rfId.toLowerCase() + "_");
 			}
-			System.out.println("Switching states in child class - fuck");
 			
 			/* in case the system is waiting for the feedback
 			while(!deviceMonitor.hadSerialAnswer()) {
