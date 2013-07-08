@@ -39,11 +39,11 @@ function populateCheckboxes(events) {
 			
 			var checkbox = $(".device"+i).children().children().children('input');	
 			if (state) {
-				checkbox.val('on').attr('checked', 'checked').iphoneStyle('refresh');
-				checkbox.change();
+				//checkbox.val('on').attr('checked', 'checked').iphoneStyle('refresh');
+				checkbox.prop('checked', true).change();
 			} else {
-				checkbox.val('off').removeAttr('checked').iphoneStyle('refresh');
-				checkbox.change();
+				//checkbox.val('off').removeAttr('checked').iphoneStyle('refresh');
+				checkbox.prop('checked', false).change();
 			}
 		}
 		console.log("------------------------------");
