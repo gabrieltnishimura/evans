@@ -25,7 +25,7 @@ public class ReverseAjax extends HttpServlet {
 
 	private final Queue<AsyncContext> asyncContexts = new ConcurrentLinkedQueue<AsyncContext>();
 
-	private final Thread generator = new Thread("Event generator") {
+	private final Thread generator = new Thread("Reverse Ajax") {
 		@Override
 		public void run() {
 			while (!Thread.currentThread().isInterrupted()) {

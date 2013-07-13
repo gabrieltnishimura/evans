@@ -1,5 +1,7 @@
 package br.com.evans.command.repository;
 
+import java.io.IOException;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -38,13 +40,14 @@ public class CommandRepository {
 		}
 	}
 	
-	public void proccesNode(String music, String artist, String album, String playlist, boolean shuffle) throws NamingException {
+	public void proccesNode(String music, String artist, String album, String playlist, boolean shuffle) throws IOException, NamingException {
 		Context initCtx = new InitialContext();
 		Context envCtx = (Context) initCtx.lookup("java:comp/env");
 		
 		//Get the device monitor so it can get the player
 		MusicPlayer musicPlayer = (MusicPlayer) envCtx.lookup("music/MusicPlayerFactory");
-		
+		musicPlayer.outputToTextFile(null, 1);
+		musicPlayer.playMusic();
 	}
 	
 	public void proccesNode(String report, String specs) throws NamingException {

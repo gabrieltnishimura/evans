@@ -6,6 +6,7 @@
     <welcome-file>index.htm</welcome-file>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  
   <resource-env-ref>
     <description>
 		Factory for the Arduino Connection
@@ -17,6 +18,7 @@
 		br.com.evans.jndi.arduino.ArduinoConnection
 	</resource-env-ref-type>
   </resource-env-ref>
+  
   <resource-env-ref>
     <description>
 		Factory for EVANS Device Monitor
@@ -28,6 +30,7 @@
 		br.com.evans.jndi.states.DeviceMonitor
 	</resource-env-ref-type>
   </resource-env-ref>
+  
   <resource-env-ref>
     <description>
 		Factory for EVANS Music Player
@@ -39,4 +42,17 @@
 		br.com.evans.jdni.music.MusicPlayer
 	</resource-env-ref-type>
   </resource-env-ref>
+  
+  <resource-env-ref>
+    <description>
+		Factory for EVANS MongoDB NOSQL Connection
+	</description>
+    <resource-env-ref-name>
+		db/MongoDBConnectionFactory
+	</resource-env-ref-name>
+    <resource-env-ref-type>
+		br.com.evans.jndi.db.MongoDBConnection
+	</resource-env-ref-type>
+  </resource-env-ref>
+  
 </web-app>

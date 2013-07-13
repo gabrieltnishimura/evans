@@ -16,7 +16,7 @@ public enum DeviceMonitor { // this is a SINGLETON!
 	private boolean isOutdated;
 	private boolean serialAnswer; // need the confirmation that the device really switched
 	private String feedback; // in case the device switches manually
-	SerialAnswerMonitor serialMonitor;
+	private SerialAnswerMonitor serialMonitor;
 	
 	DeviceMonitor() {
 		System.out.println("[STATUS] Device Monitor singleton was created. Populating the state map");
@@ -35,7 +35,7 @@ public enum DeviceMonitor { // this is a SINGLETON!
 		this.isOutdated = false;
 		this.serialAnswer = false;
 		
-		this.serialMonitor = new SerialAnswerMonitor(); // wait for changes in serial feedback
+		this.setSerialMonitor(new SerialAnswerMonitor()); // wait for changes in serial feedback
 	}
 	
 	public Device getDevice(String mapLocation) {
@@ -99,5 +99,13 @@ public enum DeviceMonitor { // this is a SINGLETON!
 
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
+	}
+
+	public SerialAnswerMonitor getSerialMonitor() {
+		return serialMonitor;
+	}
+
+	public void setSerialMonitor(SerialAnswerMonitor serialMonitor) {
+		this.serialMonitor = serialMonitor;
 	}
 }

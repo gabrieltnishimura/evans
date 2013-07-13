@@ -12,4 +12,8 @@
             type="br.com.evans.jdni.music.MusicPlayer"
             factory="br.com.evans.jdni.music.MusicPlayerFactory"/>
             
+<Resource name="db/MongoDBConnectionFactory" auth="Container"
+            type="br.com.evans.jndi.db.MongoDBConnection"
+            factory="br.com.evans.jndi.db.MongoDBConnectionFactory"/>
+            
 </Context>

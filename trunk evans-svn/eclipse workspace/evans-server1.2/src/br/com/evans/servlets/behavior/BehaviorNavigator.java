@@ -52,6 +52,7 @@ public class BehaviorNavigator extends HttpServlet {
 		String destination = request.getParameter("destination").toLowerCase();
 		String jsonResponse;
 		if (destination.equals("parent")) {
+			response.setContentType("application/json");
 			 jsonResponse = this.nodeManager.createJsonMap();
 			 response.getWriter().write(jsonResponse);
 			 response.getWriter().flush();
