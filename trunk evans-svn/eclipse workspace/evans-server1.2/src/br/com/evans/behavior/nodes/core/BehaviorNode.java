@@ -53,8 +53,7 @@ public class BehaviorNode implements Executable {
 
 	@Override
 	public void execute(List<String> parameters) {
-		// TODO Auto-generated method stub
-		
+		// implement this on later classes
 	}
 	
 }

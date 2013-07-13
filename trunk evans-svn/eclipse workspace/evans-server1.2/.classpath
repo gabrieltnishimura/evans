@@ -14,5 +14,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="F:/Documents/[evans]/E.V.A.N.S. Project/Libraries Included/mongo-java-driver-2.9.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="F:/Documents/[evans]/E.V.A.N.S. Project/Libraries Included/mongo-java-driver-2.9.3.jar"/>
+	<classpathentry kind="lib" path="F:/Documents/[evans]/E.V.A.N.S. Project/Libraries Included/mongo-java-driver-2.9.3-sources.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

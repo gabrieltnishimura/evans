@@ -61,7 +61,7 @@ public enum ArduinoConnection implements SerialPortEventListener {
 		}
 
 		if (portId == null) {
-			System.out.println("Couldn't find COM6 port.");
+			System.out.println("Couldn't find COM3 port.");
 			return;
 		}
 

@@ -13,7 +13,7 @@ import br.com.evans.behavior.nodes.core.ReportBehavior;
  * This class manages nodes. For example on which node the user is
  * currently using. Must be designed for multiple instances of users
  * loading diferent nodes whenever they want.
- *  
+ * Maybe it should be a singleton as well
  * @author Gabriel
  *
  */

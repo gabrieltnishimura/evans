@@ -12,13 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.com.evans.jndi.states.DeviceMonitor;
-
 /**
  * Servlet implementation class ArduinoInit
  */
-@WebServlet(name = "DeviceManagerInit", urlPatterns = "/DeviceManagerInit", loadOnStartup = 1)  
-public class DeviceMonitorInit extends HttpServlet {
+@WebServlet(name = "MongoDBConnectionInit", urlPatterns = "/MongoDBConnectionInit", loadOnStartup = 1)  
+public class MongoDBConnectionInit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     @Override
@@ -29,9 +27,9 @@ public class DeviceMonitorInit extends HttpServlet {
 		try {
 			initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-			envCtx.lookup("states/DeviceMonitorFactory"); // init deviceMonitor
+			envCtx.lookup("db/MongoDBConnectionFactory"); // init mongo connection
         } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of DeviceMonitor");
+        	System.out.println("[EXCEPTION] Problem when trying to load the context of MongoDBConnetion");
 			e.printStackTrace();
 		}
     }
@@ -40,24 +38,14 @@ public class DeviceMonitorInit extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		// TODO Auto-generated method stub
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-		Context initCtx = new InitialContext();
-		Context envCtx = (Context) initCtx.lookup("java:comp/env");
-		
-		//Get the device monitor so it can get device states
-		DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
-		deviceMonitor.setOutdated(true);
-		} catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of DeviceMonitorFactory");
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
 	}
 
 }

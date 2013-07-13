@@ -23,7 +23,7 @@ import br.com.evans.devices.core.Device;
  * the mainframe doesn't mix up which device it should turn on/off
  * 3.5) A function similar to toArduinoShiftRegisterCode from DeviceMonitor must 
  * be made on the arduino, so manual overrides work
- * 4) This way manual overrides also get reported to the mainframe (this server)
+ * 4) This way manual overrides are reported to the mainframe (this server)
  * 
  * ---------------------------- Second Example --------------------------------
  * 1) For instance, it is a light connected to a arduino through a relay 
@@ -31,11 +31,11 @@ import br.com.evans.devices.core.Device;
  * 2) The implementation method should handle the arduino connection 
  * and send (via serial) a string that contains the string linked to the 
  * device with the right format ("o_")
- * 3) The arduino should receive correctly the string, change the states 
+ * 3) The arduino should receive correctly the string, change the state
  * and send a string back, reporting the states to the mainframe (this server)
  * It can send two kinds of information. Maybe a binary -> decimal converted
  * number (assuming you know the order of the device in the pin	)
- * 4) This way manual overrides also get reported to the mainframe (this server)
+ * 4) This way manual overrides are reported to the mainframe (this server)
  * 
  * ---------------------------- Third Example --------------------------------
  * 1) For instance, it is a light connected to a arduino through x10 
@@ -49,6 +49,9 @@ import br.com.evans.devices.core.Device;
  * 2) The implementation method should handle a POST from the EletricImp,
  * understanding what kind of info will be transmitted, so data can be 
  * processed correctly
+ * 3) It need to be a servlet that execute the procedure given 
+ * a device-identifyer property. Called only when something happens
+ * in the EletricImp side.
  * 
  * @author Gcats
  *
