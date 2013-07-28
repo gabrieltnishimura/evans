@@ -1,15 +1,22 @@
 package br.com.evans.behavior.nodes.core;
 
 import java.util.List;
+
+import org.bson.types.ObjectId;
+
 import br.com.evans.command.repository.CommandRepository;
 
 public class DeviceBehavior extends BehaviorNode {
 	CommandRepository repository;
-	public DeviceBehavior(String mapLocation, int height) {
-		super(mapLocation, height);
+	public DeviceBehavior(int id, String mapLocation, List<String> responseWhenAccessed) {
+		super(id, mapLocation, responseWhenAccessed);
 		this.repository = null;
 	}
 
+	public DeviceBehavior(ObjectId internalId) {
+		super(internalId);
+	}
+	
 	@Override
 	public void execute(List<String> parameters) {
 		if (parameters.size() == 1 && parameters.get(0).equals("on")) {

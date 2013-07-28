@@ -19,7 +19,8 @@
         	<tbody>
 	        <% for (BehaviorNode node : parent.getChilds()) { %>
 	        	 <tr class="node<%= i %> node_each">
-	        	 	<th><h1 style="background-color:grey; cursor:pointer;"><a class="clickable"><%= node.getName() %></a></h1></th>
+	        	 	<th><h1 style="background-color:grey; cursor:pointer;"><a href="javascript:void(0)" 
+	        	 		onclick="$.ajax({type:'GET',url:'<%= node.getLink() %>'});" class="clickable"><%= node.getName() %></a></h1></th>
 	       	 	</tr>
 	       	<% i++;} %>
        		</tbody>

@@ -57,7 +57,7 @@ public enum MusicPlayer { // singleton
 			initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 			MongoDBConnection mongo = (MongoDBConnection) envCtx.lookup("db/MongoDBConnectionFactory"); 
-			DBCollection coll = mongo.getCollection("test");
+			DBCollection coll = mongo.getCollection("musics");
 			
 			printer.append("1\n");
 			printer.append("1 " + coll.findOne().get("directory"));
@@ -92,7 +92,7 @@ public enum MusicPlayer { // singleton
 			if (isProcessRunning("multi.exe")) {
 				killProcess("multi.exe");
 			}
-	        try { /* wait until killed one instance of multi.exe */
+	        try { /* wait until killed instance of multi.exe */
 	            Thread.sleep(200);
 	        } catch (InterruptedException ex) {
 	        	System.out.println("[EXCEPTION] Couldn't wait 300 ms to kill process.");

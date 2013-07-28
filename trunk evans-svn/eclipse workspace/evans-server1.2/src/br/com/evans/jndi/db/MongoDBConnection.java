@@ -12,7 +12,7 @@ public enum MongoDBConnection {
 	DB database;
 	private static final String ADDRESS = "localhost";
 	private static final int PORT = 27017;
-	private static final String DATABASE = "test";
+	private static final String DATABASE = "evans";
 	
 	MongoDBConnection() {
 		try {
