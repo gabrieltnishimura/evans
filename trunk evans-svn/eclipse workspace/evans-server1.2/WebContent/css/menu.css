@@ -1,0 +1,139 @@
+@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+@import url(http://fonts.googleapis.com/css?family=Pathway+Gothic+One);
+html{
+  font-size:87.5%;
+  background-color: #434343;
+  background-image:linear-gradient(#434343, #282828);
+  background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+}
+*{
+  box-sizing:border-box;
+}
+body{
+  padding:30px;
+  font-size: 1.3rem;
+  font-family:"Helvetica Neue",Helvetica,arial, sans-serif;
+  bottom:2000;
+  background-color: #434343;
+  background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+  height:100%;
+  background-size:50px 50px;
+}
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+  color:black;
+}
+.GUI{
+  width:350px;
+}
+.GUI-list-item{
+  width:auto;
+  padding :0;
+  -webkit-perspective:200px;
+  margin-bottom:15px;
+}
+.GUI-list-item:after,
+.GUI-list-item>a:after{
+  display:block;
+  content: " ";
+  visibililty: hidden;
+  height:0;
+  clear:both;
+}
+.GUI span{
+  display:block;
+  float:left;
+  line-height:1;
+  padding:13px;
+}
+.GUI-list-item > a{
+  display:block;
+  color:#fff;
+  text-decoration:none;
+  width: 100%;
+   background:transparent;
+}
+.GUI-list .on .label{
+  width:305px;
+}
+.GUI-list li:nth-child(1) span{
+  background:rgba(240,108,160,.5);
+}
+.GUI-list li:nth-child(2) span{
+  background:rgba(155,108,248,.5);
+}
+.GUI-list li:nth-child(3) span{
+  background:rgba(248,183,108,.5);
+}
+.GUI-list li:nth-child(4) span{
+  background:rgba(108,166,248,.5);
+}
+.GUI-list li:nth-child(5) span{
+  background:rgba(248,200,108,.5);
+}
+.label{
+   border-left: 1px solid rgba(0,0,0,.25);
+  font-family: "Pathway Gothic One", helvetica, arial;
+  text-transform: uppercase;
+  height: 45px;
+  font-size: 1.5rem;
+  color:black;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.off .icon-background {
+  -webkit-transform: rotate(0deg);
+}
+
+.on .icon-background {
+  -webkit-transform: rotate(90deg);
+}
+.icon{
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  transition: all .4s ease;
+  -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+}
+.off .icon {
+  -webkit-transform: rotate(0deg);
+}
+
+.on .icon {
+  -webkit-transform: rotate(90deg);
+}
+li ul {
+  position: absolute;
+  width: 100%;
+  -webkit-transform-origin: 50% 0;
+  -webkit-backface-visibility: hidden;
+   -webkit-transform: rotateX(-90deg);
+  -webkit-transform-style: preserve-3d;
+  visibility:hidden;
+  transition: -webkit-transform .2s ease-out;
+  
+}
+.on ~  ul {
+  visibility: visible;
+  position: static; 
+  float: left;
+  #background: #fff;
+  clear: left;
+  opacity: 1;
+  -webkit-transform: rotateX(0deg);
+  box-shadow: 0 1px 6px rgba(255,255,255,.1);
+}
+
+li li {
+  padding: 8px 20px 8px 45px;
+  margin-top:5px ;
+  background:rgba(255,255,255,.7);
+}
+
+li li a {
+  text-decoration: none;
+  color: #555;
+  line-height: 1.2;
+  font-size: .85rem;
+}

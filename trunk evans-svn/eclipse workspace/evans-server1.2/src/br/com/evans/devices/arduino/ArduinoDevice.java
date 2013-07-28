@@ -56,7 +56,7 @@ import br.com.evans.devices.core.Device;
  * @author Gcats
  *
  */
-public class ArduinoDevice implements Device {
+public abstract class ArduinoDevice implements Device {
 	private String location;
 	private boolean isOn;
 	

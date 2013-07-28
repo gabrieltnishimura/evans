@@ -1,6 +1,7 @@
 package br.com.evans.servlets.behavior;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.com.evans.behavior.nodes.core.BehaviorNode;
 import br.com.evans.behavior.nodes.manager.BehaviorNodeManager;
 
 /**
@@ -38,10 +40,21 @@ public class BehaviorNavigator extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String reset = request.getParameter("reset").toLowerCase();
-		if (reset.equals("1")) {
+		String reset = request.getParameter("reset");
+		if (reset != null && reset.toLowerCase().equals("1")) {
 			this.nodeManager.navigateToParent();
-			//System.out.println("[NODES] Resetting parent.");
+		} else {
+			String name = request.getParameter("name").toLowerCase();
+			System.out.println("Trying to switch " + name);
+			BehaviorNodeManager auxiliaryBehavior = new BehaviorNodeManager();
+			System.out.println(auxiliaryBehavior.createJsonMap());
+			auxiliaryBehavior.getParent();
+			BehaviorNode node = BehaviorNode.searchForChild(name, auxiliaryBehavior.getParent());
+			if (node != null) {
+				node.execute(new ArrayList<String>());
+			} else {
+				System.out.println("Test");
+			}
 		}
 	}
 
@@ -57,7 +70,9 @@ public class BehaviorNavigator extends HttpServlet {
 			 response.getWriter().write(jsonResponse);
 			 response.getWriter().flush();
 		} else if (!destination.isEmpty()) {
-			if (nodeManager.navigateTo(destination) != null) {
+			if (destination.contains("reset_")) {
+				
+			} if (nodeManager.navigateTo(destination) != null) {
 				response.setContentType("application/json");
 				jsonResponse = this.nodeManager.createJsonMap();
 				//System.out.println(jsonResponse);

@@ -5,13 +5,19 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
+import org.bson.types.ObjectId;
+
 import br.com.evans.command.repository.CommandRepository;
 
 public class MusicBehavior extends BehaviorNode {
 
-	public MusicBehavior(String name, int height) {
-		super(name, height);
+	public MusicBehavior(int id, String name, List<String> responseWhenAccessed) {
+		super(id, name, responseWhenAccessed);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public MusicBehavior(ObjectId internalId) {
+		super(internalId);
 	}
 	
 	@Override
