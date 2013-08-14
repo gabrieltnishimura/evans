@@ -41,7 +41,9 @@ public class SerialAnswerMonitor {
 				    	}
 	    			}
 				} catch (NamingException e) {
-		        	System.out.println("[EXCEPTION] Problem when trying to load the context of DeviceMonitorFactory");
+		        	System.out.println("[EXCEPTION] Problem when trying to load the context of Serial Answer Monitoring");
+		        	System.out.println("Killing [" + Thread.currentThread().getName() + "] thread to stop exception propagating.");
+		        	Thread.currentThread().interrupt();
 					e.printStackTrace();
 				}
 			}
