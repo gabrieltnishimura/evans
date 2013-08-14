@@ -10,7 +10,7 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import org.bson.types.ObjectId;
 
-import br.com.evans.filemanager.md5.Digest;
+import br.com.evans.security.encryption.Digest;
 
 public class FileIterator {
 	private static String mainDir;
