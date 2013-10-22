@@ -3,15 +3,19 @@
 #define RX_MODULE_PIN 11
 #define TX_MODULE_PIN 13
 #define IF_PIN 8
+#define NDEV 4
+#define CARRIER_PERIOD 26.3
 #define SIXTEEN 420
-#define LEADER_ON 3287
-#define LEADER_OFF 1630
-#define TRAILER_ON SIXTEEN
-#define TRAILER_OFF SIXTEEN
-#define ONE_ON SIXTEEN
-#define ONE_OFF SIXTEEN
-#define ZERO_ON SIXTEEN
-#define ZERO_OFF 1209
+
+#define LEADER_ON 125
+#define LEADER_OFF 62
+#define TRAILER_ON 16
+#define TRAILER_OFF 46
+#define ONE_ON 16
+#define ONE_OFF 16
+#define ZERO_ON 16
+#define ZERO_OFF 46
+
 #define WORDS 16
 
 /** Air Conditioner R0 
@@ -31,9 +35,9 @@
  * 	66deg ~ 88 deg => 02H ~ 0EH (B4 - B7)
  * }
  * Word 10	: B4 - B7 = Timer Mode
-			  B0 - B3 = Master Control
-	B4 - B7 : Timer Off, Sleep Mode, Timer Off Time, Timer On Time, Off->On => 00H, 01H, 02H, 03H, 04H
-	B0 - B3 : Auto, Cool, Dry, Fan
+	          B0 - B3 = Master Control
+                  B4 - B7 : Timer Off, Sleep Mode, Timer Off Time, Timer On Time, Off->On => 00H, 01H, 02H, 03H, 04H
+                  B0 - B3 : Auto, Cool, Dry, Fan
 			  00H,  01H,  02H, 03H
  * Word 11	: 
 	B4 - B7 : Off, Vertical Oscilation, Horizontal Oscilation, Both => 
@@ -55,7 +59,31 @@ int previousButton = LOW;    // the previous reading from the input pin
 long time = 0;         // the last time the output pin was toggled
 long debounce = 175;   // the debounce time, increase if the output flickers
 
-char *command[NCOMMANDS] = {};
+int word1[8] =   {0, 0, 1, 0, 1, 0, 0, 0}; // marker code M1
+int word2[8] =   {1, 1, 0, 0, 0, 1, 1, 0}; // marker code M2
+int word3[8] =   {0, 0, 0, 0, 0, 0, 0, 0}; // marker code Parity P
+int word4[8] =   {0, 0, 0, 0, 1, 0, 0, 0}; // custom code C1
+int word5[8] =   {0, 0, 0, 0, 1, 0, 0, 0}; // sub custom code C2
+int word6[8] =   {0, 1, 1, 1, 1, 1, 1, 1}; // command code D
+int word7[8] =   {1, 0, 0, 1, 0, 0, 0, 0}; // 0x09
+int word8[8] =   {0, 0, 0, 0, 1, 1, 0, 0}; // 0x30
+int word9a[4] =  {0, 1, 0, 0}; // chart A - TEMP
+int word9b[4] =  {0, 1, 0, 0}; // If B0 = 1 Unit was Off and is now On; if B0 = 0 then unit was already On
+int word10[8] =  {0, 0, 0, 0, 0, 0, 0, 0}; // chart C -
+int word11[8] =  {0, 0, 0, 0, 0, 0, 0, 0}; // chart B && E
+int word12[8] =  {0, 0, 1, 0, 0, 0, 0, 0}; // chart D - FAN
+int word13[8] =  {0, 0, 0, 0, 0, 0, 0, 0}; // timer off value
+int word14[8] =  {0, 0, 0, 0, 0, 0, 0, 0}; // timer on value
+int word15[8] =  {0, 0, 0, 0, 0, 1, 0, 0}; // 0x20
+int word16[8] =  {0, 0, 1, 0, 1, 0, 0, 0}; // w8 + w16 = XX00H
+
+char *id_off[NDEV] = {"a", "b", "c", "d"};
+int pins[NDEV] = {2, 3, 4, 5};
+boolean on[NDEV] = {false, false, false, false};
+boolean debug = false; // set true to debug message comm
+int switchPin = 0;
+int led_iterator;
+
 void setup()
 {
     pinMode(BUTTON_PIN, INPUT);
@@ -70,36 +98,36 @@ void setup()
 void loop()
 {
 	if (wasMessageReceived()) {
-		sendIFMessage();
+		//sendIFMessage();
 	}
 }
 
 void sendLeader() {
 	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(LEADER_ON);
+	delayMicroseconds(LEADER_ON * CARRIER_PERIOD);
 	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(LEADER_OFF);
+	delayMicroseconds(LEADER_OFF * CARRIER_PERIOD);
 }
 
 void sendOne() {
 	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(ONE_ON);
-	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(ONE_OFF);
+	delayMicroseconds(ONE_ON * CARRIER_PERIOD);
+	digitalWrite(IF_PIN, LOW);
+	delayMicroseconds(ONE_OFF * CARRIER_PERIOD);
 }
 
 void sendZero() {
 	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(ZERO_ON);
-	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(ZERO_OFF);
+	delayMicroseconds(ZERO_ON * CARRIER_PERIOD);
+	digitalWrite(IF_PIN, LOW);
+	delayMicroseconds(ZERO_OFF * CARRIER_PERIOD);
 }
 
 void sendTrailer() {
 	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(TRAILER_ON);
+	delayMicroseconds(TRAILER_ON * CARRIER_PERIOD);
 	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(TRAILER_OFF);
+	delayMicroseconds(TRAILER_OFF * CARRIER_PERIOD);
 }
 
 boolean wasMessageReceived()
@@ -143,4 +171,14 @@ boolean wasButtonPressed()
   
 	previousButton = readingButton;
 	return pressed;
+}
+
+int dectobin(int decimalNum, int * binaryArray) {
+int zeros = 8 - String(decimalNum,BIN).length();
+String myStr;
+for (int i=0; i<zeros; i++) {
+  myStr = myStr + "0";
+}
+myStr = myStr + String(decimalNum,BIN);         
+Serial.println(myStr);
 }
