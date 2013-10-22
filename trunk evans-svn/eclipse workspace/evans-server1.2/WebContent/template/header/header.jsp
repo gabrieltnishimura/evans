@@ -10,12 +10,12 @@
 			<div class="container-fluid">
 				<!-- BEGIN LOGO -->
 				<a class="brand" href="../admin/index.jsp">
-					<img src="../../css/img/logo.png" alt="logo">
+					<img src="${pageContext.request.contextPath}/css/img/logo.png" alt="logo">
 				</a>
 				<!-- END LOGO -->
 				<!-- BEGIN RESPONSIVE MENU TOGGLER -->
 				<a href="javascript:;" class="btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<img src="../../css/img/menu-toggler.png" alt="">
+					<img src="${pageContext.request.contextPath}/css/img/menu-toggler.png" alt="">
 				</a>          
 				<!-- END RESPONSIVE MENU TOGGLER -->            
 				<!-- BEGIN TOP NAVIGATION MENU -->              
@@ -90,7 +90,7 @@
 							</li>
 							<li>
 								<a href="inbox.html?a=view">
-								<span class="photo"><img src="./../../css/img/avatar2.jpg" alt=""></span>
+								<span class="photo"><img src="${pageContext.request.contextPath}/css/img/avatar2.jpg" alt=""></span>
 								<span class="subject">
 								<span class="from">Lisa Wong</span>
 								<span class="time">Just Now</span>
@@ -103,7 +103,7 @@
 							</li>
 							<li>
 								<a href="inbox.html?a=view">
-								<span class="photo"><img src="./../../css/img/avatar3.jpg" alt=""></span>
+								<span class="photo"><img src="${pageContext.request.contextPath}/css/img/avatar3.jpg" alt=""></span>
 								<span class="subject">
 								<span class="from">Richard Doe</span>
 								<span class="time">16 mins</span>
@@ -116,7 +116,7 @@
 							</li>
 							<li>
 								<a href="inbox.html?a=view">
-								<span class="photo"><img src="./../../css/img/avatar1.jpg" alt=""></span>
+								<span class="photo"><img src="${pageContext.request.contextPath}/css/img/avatar1.jpg" alt=""></span>
 								<span class="subject">
 								<span class="from">Bob Nilson</span>
 								<span class="time">2 hrs</span>
@@ -218,7 +218,7 @@
 					<!-- BEGIN USER LOGIN DROPDOWN -->
 					<li class="dropdown user">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img alt="" src="../../css/img/avatar1_small.jpg">
+						<img alt="" src="${pageContext.request.contextPath}/css/img/avatar1_small.jpg">
 						<span class="username">Bob Nilson</span>
 						<i class="icon-angle-down"></i>
 						</a>

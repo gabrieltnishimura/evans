@@ -1,5 +1,5 @@
 <html>
-	<jsp:include page="../header/header.jsp" flush="true">
+	<jsp:include page="../header/header.jsp">
 	    <jsp:param name="includeType" value="index"/>
 	</jsp:include>
 		<!-- BEGIN PAGE -->
@@ -1136,7 +1136,7 @@
 												<div class="scroller" style="height:290px" data-always-visible="1" data-rail-visible1="1">
 													<div class="row-fluid">
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Robert Nilson</a> 
@@ -1146,7 +1146,7 @@
 															</div>
 														</div>
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Lisa Miller</a> 
@@ -1158,7 +1158,7 @@
 													</div>
 													<div class="row-fluid">
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Eric Kim</a> 
@@ -1168,7 +1168,7 @@
 															</div>
 														</div>
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Lisa Miller</a> 
@@ -1180,7 +1180,7 @@
 													</div>
 													<div class="row-fluid">
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Eric Kim</a> 
@@ -1190,7 +1190,7 @@
 															</div>
 														</div>
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Lisa Miller</a> 
@@ -1202,14 +1202,14 @@
 													</div>
 													<div class="row-fluid">
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div><a href="#">Eric Kim</a> <span class="label label-info">Pending</span></div>
 																<div>19 Jan 2013 12:45PM</div>
 															</div>
 														</div>
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Lisa Miller</a> 
@@ -1221,14 +1221,14 @@
 													</div>
 													<div class="row-fluid">
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div><a href="#">Eric Kim</a> <span class="label label-info">Pending</span></div>
 																<div>19 Jan 2013 12:45PM</div>
 															</div>
 														</div>
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Lisa Miller</a> 
@@ -1240,7 +1240,7 @@
 													</div>
 													<div class="row-fluid">
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Eric Kim</a> 
@@ -1250,7 +1250,7 @@
 															</div>
 														</div>
 														<div class="span6 user-info">
-															<img alt="" src="../../css/img/avatar.png" />
+															<img alt="" src="${pageContext.request.contextPath}/css/img/avatar.png" />
 															<div class="details">
 																<div>
 																	<a href="#">Lisa Miller</a> 
