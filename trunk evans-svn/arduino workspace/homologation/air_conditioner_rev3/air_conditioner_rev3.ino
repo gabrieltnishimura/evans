@@ -3,10 +3,9 @@
 #define RX_MODULE_PIN 11
 #define TX_MODULE_PIN 13
 #define IF_PIN 8
-#define NDEV 4
-#define CARRIER_PERIOD 26.3
-#define SIXTEEN 420
 
+// ----- FOR TWEAKING PURPOSES ----- 
+#define CARRIER_PERIOD 26.3
 #define LEADER_ON 125
 #define LEADER_OFF 62
 #define TRAILER_ON 16
@@ -15,8 +14,11 @@
 #define ONE_OFF 16
 #define ZERO_ON 16
 #define ZERO_OFF 46
+// ---------------------------------
 
-#define WORDS 16
+#define MESSAGE_LENGHT 1
+#define WORDS_SIZE 16
+#define BITS_SIZE 8
 
 /** Air Conditioner R0 
  * Code contains 16 words, each word has 8bits that follow the rules: 
@@ -54,59 +56,38 @@
 // button stuff
 int readingButton;           // the current reading from the input pin
 int previousButton = LOW;    // the previous reading from the input pin
-
 // random stuff
 long time = 0;         // the last time the output pin was toggled
 long debounce = 175;   // the debounce time, increase if the output flickers
-int words[16][8] = {
-{0, 0, 1, 0, 1, 0, 0, 0}, // marker code M1
-{1, 1, 0, 0, 0, 1, 1, 0}, // marker code M2
-{0, 0, 0, 0, 0, 0, 0, 0}, // marker code Parity P
-{0, 0, 0, 0, 1, 0, 0, 0}, // custom code C1
-{0, 0, 0, 0, 1, 0, 0, 0}, // sub custom code C2
-{0, 1, 1, 1, 1, 1, 1, 1}, // command code D
-{1, 0, 0, 1, 0, 0, 0, 0}, // 0x09
-{0, 0, 0, 0, 1, 1, 0, 0}, // 0x30
-{0, 1, 0, 0, 0, 0, 0, 0}, // chart A - TEMP
-{0, 0, 0, 0, 0, 0, 0, 0}, // chart C -
-{0, 0, 0, 0, 0, 0, 0, 0}, // chart B && E
-{0, 0, 1, 0, 0, 0, 0, 0}, // chart D - FAN
-{0, 0, 0, 0, 0, 0, 0, 0}, // timer off value
-{0, 0, 0, 0, 0, 0, 0, 0}, // timer on value
-{0, 0, 0, 0, 0, 1, 0, 0}, // 0x20
-{0, 0, 1, 0, 1, 0, 0, 0} // w8 + w16 = XX00H
+
+int message[WORDS_SIZE][BITS_SIZE] = {
+{1, 1, 0, 1, 0, 1, 1, 1}, // marker code M1
+{0, 0, 1, 1, 1, 0, 0, 1}, // marker code M2
+{1, 1, 1, 1, 1, 1, 1, 1}, // marker code Parity P
+{1, 1, 1, 1, 0, 1, 1, 1}, // custom code C1
+{1, 1, 1, 1, 0, 1, 1, 1}, // sub custom code C2
+{1, 0, 0, 0, 0, 0, 0, 0}, // command code D
+{0, 1, 1, 0, 1, 1, 1, 1}, // 0x09
+{1, 1, 1, 1, 0, 0, 1, 1}, // 0x30
+{1, 0, 1, 1, 1, 1, 1, 1}, // chart A - TEMP=B4-B7, B0=
+{1, 1, 1, 1, 1, 1, 1, 1}, // chart C -
+{1, 1, 1, 1, 1, 1, 1, 1}, // chart B && E
+{1, 1, 0, 1, 1, 1, 1, 1}, // chart D - FAN
+{1, 1, 1, 1, 1, 1, 1, 1}, // timer off value
+{1, 1, 1, 1, 1, 1, 1, 1}, // timer on value
+{1, 1, 1, 1, 1, 0, 1, 1}, // 0x20
+{1, 1, 0, 1, 0, 1, 1, 1} // w8 + w16 = XX00H
 };
 
-int word1[8] =   {0, 0, 1, 0, 1, 0, 0, 0}; // marker code M1
-int word2[8] =   {1, 1, 0, 0, 0, 1, 1, 0}; // marker code M2
-int word3[8] =   {0, 0, 0, 0, 0, 0, 0, 0}; // marker code Parity P
-int word4[8] =   {0, 0, 0, 0, 1, 0, 0, 0}; // custom code C1
-int word5[8] =   {0, 0, 0, 0, 1, 0, 0, 0}; // sub custom code C2
-int word6[8] =   {0, 1, 1, 1, 1, 1, 1, 1}; // command code D
-int word7[8] =   {1, 0, 0, 1, 0, 0, 0, 0}; // 0x09
-int word8[8] =   {0, 0, 0, 0, 1, 1, 0, 0}; // 0x30
-int word9a[4] =  {0, 1, 0, 0}; // chart A - TEMP
-int word9b[4] =  {0, 1, 0, 0}; // If B0 = 1 Unit was Off and is now On; if B0 = 0 then unit was already On
-int word10[8] =  {0, 0, 0, 0, 0, 0, 0, 0}; // chart C -
-int word11[8] =  {0, 0, 0, 0, 0, 0, 0, 0}; // chart B && E
-int word12[8] =  {0, 0, 1, 0, 0, 0, 0, 0}; // chart D - FAN
-int word13[8] =  {0, 0, 0, 0, 0, 0, 0, 0}; // timer off value
-int word14[8] =  {0, 0, 0, 0, 0, 0, 0, 0}; // timer on value
-int word15[8] =  {0, 0, 0, 0, 0, 1, 0, 0}; // 0x20
-int word16[8] =  {0, 0, 1, 0, 1, 0, 0, 0}; // w8 + w16 = XX00H
-
-char *id_off[NDEV] = {"a", "b", "c", "d"};
-int pins[NDEV] = {2, 3, 4, 5};
-boolean on[NDEV] = {false, false, false, false};
 boolean debug = false; // set true to debug message comm
-int switchPin = 0;
-int led_iterator;
+int wordIterator, bitIterator;
 
 void setup()
 {
+  Serial.begin(9600);
     pinMode(BUTTON_PIN, INPUT);
-	pinMode(IF_PIN, OUTPUT); // infrared pin
-    
+    pinMode(IF_PIN, OUTPUT); // infrared pin
+    pinMode(5, OUTPUT);
     vw_setup(2000);	 // Bits per sec
     vw_set_rx_pin(RX_MODULE_PIN);
     vw_set_tx_pin(TX_MODULE_PIN);
@@ -115,34 +96,57 @@ void setup()
 
 void loop()
 {
-	if (wasMessageReceived()) {
-		//sendIFMessage();
+  
+        if (wasButtonPressed()) {
+                digitalWrite(5, HIGH);
+                sendIFMessage();
+                digitalWrite(5, LOW);
+        }
+        if (wasMessageReceived()) {
+                digitalWrite(5, HIGH);
+                sendIFMessage();
+                digitalWrite(5, LOW);
 	}
 }
 
+void sendIFMessage() {
+        sendLeader();
+            for(wordIterator = 0; wordIterator < WORDS_SIZE; wordIterator++){
+                for(bitIterator = 0; bitIterator < BITS_SIZE; bitIterator++) {
+                    if (message[wordIterator][bitIterator] == 1) {
+                        sendOne();
+                    } else {
+                        sendZero();
+                    }
+                }
+            }  
+        sendTrailer();
+}
+
+
 void sendLeader() {
-	digitalWrite(IF_PIN, HIGH);
+	digitalWrite(IF_PIN, LOW);
 	delayMicroseconds(LEADER_ON * CARRIER_PERIOD);
 	digitalWrite(IF_PIN, HIGH);
 	delayMicroseconds(LEADER_OFF * CARRIER_PERIOD);
 }
 
 void sendOne() {
-	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(ONE_ON * CARRIER_PERIOD);
 	digitalWrite(IF_PIN, LOW);
+	delayMicroseconds(ONE_ON * CARRIER_PERIOD);
+	digitalWrite(IF_PIN, HIGH);
 	delayMicroseconds(ONE_OFF * CARRIER_PERIOD);
 }
 
 void sendZero() {
-	digitalWrite(IF_PIN, HIGH);
-	delayMicroseconds(ZERO_ON * CARRIER_PERIOD);
 	digitalWrite(IF_PIN, LOW);
+	delayMicroseconds(ZERO_ON * CARRIER_PERIOD);
+	digitalWrite(IF_PIN, HIGH);
 	delayMicroseconds(ZERO_OFF * CARRIER_PERIOD);
 }
 
 void sendTrailer() {
-	digitalWrite(IF_PIN, HIGH);
+	digitalWrite(IF_PIN, LOW);
 	delayMicroseconds(TRAILER_ON * CARRIER_PERIOD);
 	digitalWrite(IF_PIN, HIGH);
 	delayMicroseconds(TRAILER_OFF * CARRIER_PERIOD);
@@ -155,24 +159,13 @@ boolean wasMessageReceived()
 	boolean rightString = false;
   
 	if (vw_get_message(buf, &buflen)) {
-		for(led_iterator = 0; led_iterator < NDEV; led_iterator++) {
-			switchPin = led_iterator;
-			if (strlen((char*)buf) != 1) { // received message length must be 1
-			 rightString = false;
-			} else {
-				rightString = true;
-				if ((uint8_t)id_off[led_iterator][0] != buf[0]) {
-					rightString = false;
-				} // if equals
-				if (rightString) {
-					break;
-				}
-			} // if length is equal
-			 
-			if (rightString) {
-				break;
-			}
-		}// iterates through all leds
+            if (strlen((char*)buf) != MESSAGE_LENGHT) { // received message length must be MESSAGE_LENGHT
+                rightString = false;
+	    } else {
+	        rightString = true;
+                // check message integrity
+	    } 
+
 	}
 	return rightString;
 }
