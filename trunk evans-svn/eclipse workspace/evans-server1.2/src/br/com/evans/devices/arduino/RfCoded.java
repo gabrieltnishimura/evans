@@ -89,5 +89,11 @@ public class RfCoded extends ArduinoDevice {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void configure(Object[] args) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

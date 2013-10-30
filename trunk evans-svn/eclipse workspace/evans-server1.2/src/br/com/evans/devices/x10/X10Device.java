@@ -28,4 +28,10 @@ public class X10Device implements Device{
 		return null;
 	}
 
+	@Override
+	public void configure(Object[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
