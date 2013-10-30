@@ -57,7 +57,7 @@ import br.com.evans.devices.core.Device;
  *
  */
 public abstract class ArduinoDevice implements Device {
-	private String location;
+	protected String location;
 	private boolean isOn;
 	
 	public ArduinoDevice(String location, boolean isOn) {

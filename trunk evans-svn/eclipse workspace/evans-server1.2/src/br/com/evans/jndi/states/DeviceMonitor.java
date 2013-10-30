@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import br.com.evans.devices.arduino.AirConditioner;
 import br.com.evans.devices.arduino.RfCoded;
 import br.com.evans.devices.core.Device;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -32,6 +32,7 @@ public enum DeviceMonitor { // this is a SINGLETON!
 		devices.put(6, new RfCoded("doorside", false, "e", "f"));
 		devices.put(7, new RfCoded("bathroom", false, "g", "h"));
 		devices.put(8, new RfCoded("room", false, "o", "p"));
+		devices.put(9, new AirConditioner("air conditioner", false, 18, 1, 1, "j"));
 		this.isOutdated = false;
 		this.serialAnswer = false;
 		

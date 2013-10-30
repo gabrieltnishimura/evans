@@ -1,6 +1,7 @@
 package br.com.evans.servlets.ajax.basic;
 
 import java.io.*;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -8,6 +9,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import br.com.evans.devices.arduino.AirConditioner;
 import br.com.evans.devices.arduino.RfCoded;
 import br.com.evans.devices.core.Device;
 import br.com.evans.jndi.states.DeviceMonitor;
@@ -68,7 +70,7 @@ public class SpeechRecognitionHandling extends HttpServlet {
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory"); //getting the connection can get a little costy(process) I guess
 			
 			Device device = deviceMonitor.getDevice(recognitionString);
-			if (device != null && device instanceof RfCoded) { // switch states if the hashmap returns a valid RfCoded device
+			if (device != null && (device instanceof RfCoded || device instanceof AirConditioner)) { // switch states if the hashmap returns a valid RfCoded device
 				System.out.println("[STATUS]: device exists, switching it's state");
 				device.switchStates();
 

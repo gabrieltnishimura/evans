@@ -17,7 +17,7 @@ public interface Device {
 	 * Returns the status of the interfacing device
 	 * @TODO what is the interfacing device? what should I do in
 	 * order to return it's status
-	 * @return
+	 * @return interface state
 	 */
 	public int getInterfaceState();
 	
@@ -26,5 +26,11 @@ public interface Device {
 	 * @return location String
 	 */
 	public String getLocation();
+	
+	/**
+	 * Configure device
+	 * @return
+	 */
+	public void configure(Object args[]);
 	
 }

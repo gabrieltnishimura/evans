@@ -10,7 +10,7 @@
   </session-config>
   <context-param>
     <param-name>server-hostname</param-name>
-    <param-value>http://177.141.159.142:8080</param-value>
+    <param-value>http://189.100.69.143:8080</param-value>
   </context-param>
   <resource-env-ref>
     <description>
