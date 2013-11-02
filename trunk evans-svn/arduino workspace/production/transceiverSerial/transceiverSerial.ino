@@ -2,7 +2,7 @@
  * Program for the arduino connected to the serial
  */
 #include <VirtualWire.h>
-#define BUTTON_PIN 2
+#define BUTTON_PIN 3
 #define RX_MODULE_PIN 11
 #define TX_MODULE_PIN 13
 #define MAX_WORD_LENGTH 40

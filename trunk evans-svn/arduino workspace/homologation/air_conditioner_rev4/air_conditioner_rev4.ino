@@ -18,8 +18,7 @@
 
 #define TEMPERATURE 8
 #define FAN_MODE 9
-#define SPEED_MODE 10
-
+#define FAN_SPEED 10
 #define CHECKSUM 15
 
 // button stuff
@@ -28,53 +27,52 @@ int previousButton = LOW;    // the previous reading from the input pin
 // random stuff
 long time = 0;         // the last time the output pin was toggled
 long debounce = 175;   // the debounce time, increase if the output flickers
-int turnOff;
+boolean turnOff;
+byte sumTillNow;
 
 char on = 'J';
 char off = 'j';
-boolean tryToComposeMessage = false;
 
-int message[16][8] = {
-{1, 1, 0, 1, 0, 1, 1, 1}, // marker code M1
-{0, 0, 1, 1, 1, 0, 0, 1}, // marker code M2
-{1, 1, 1, 1, 1, 1, 1, 1}, // marker code Parity P
-{1, 1, 1, 1, 0, 1, 1, 1}, // custom code C1
-{1, 1, 1, 1, 0, 1, 1, 1}, // sub custom code C2
-{1, 0, 0, 0, 0, 0, 0, 0}, // command code D
-{0, 1, 1, 0, 1, 1, 1, 1}, // 0x09
-{1, 1, 1, 1, 0, 0, 1, 1}, // 0x30
-
-// word 8
-{0, 1, 1, 1, 0, 1, 0, 1}, // chart A - TEMP=B4-B7, B0=wasON? 1 yes 0 no
-
-{1, 1, 1, 1, 1, 1, 1, 1}, // chart C -
-{1, 1, 1, 1, 1, 1, 1, 1}, // chart B && E
-
-//{1, 1, 0, 1, 1, 1, 1, 1}, // chart D - FAN
-{1, 1, 1, 1, 1, 1, 1, 1}, // chart D - FAN
-
-{1, 1, 1, 1, 1, 1, 1, 1}, // timer off value
-{1, 1, 1, 1, 1, 1, 1, 1}, // timer on value
-{1, 1, 1, 1, 1, 0, 1, 1}, // 0x20
-
-//{1, 1, 0, 1, 0, 1, 1, 1} // w8 + w16 = XX00H
-{0, 0, 0, 0, 0, 1, 0, 1} // w8 ~ 16 = XX00H
+byte message[16][8] = {
+    {1, 1, 0, 1, 0, 1, 1, 1}, // marker code M1
+    {0, 0, 1, 1, 1, 0, 0, 1}, // marker code M2
+    {1, 1, 1, 1, 1, 1, 1, 1}, // marker code Parity P
+    {1, 1, 1, 1, 0, 1, 1, 1}, // custom code C1
+    {1, 1, 1, 1, 0, 1, 1, 1}, // sub custom code C2
+    {1, 0, 0, 0, 0, 0, 0, 0}, // command code D
+    {0, 1, 1, 0, 1, 1, 1, 1}, // 0x09
+    {1, 1, 1, 1, 0, 0, 1, 1}, // 0x30
+    
+    // word 8
+    {0, 1, 1, 1, 0, 1, 0, 1}, // chart A - TEMP=B4-B7, B0=wasON? 1 yes 0 no
+    
+    {1, 1, 1, 1, 1, 1, 1, 1}, // chart C -
+    {1, 1, 1, 1, 1, 1, 1, 1}, // chart B && E
+    
+    //{1, 1, 0, 1, 1, 1, 1, 1}, // chart D - FAN
+    {1, 1, 1, 1, 1, 1, 1, 1}, // chart D - FAN
+    
+    {1, 1, 1, 1, 1, 1, 1, 1}, // timer off value
+    {1, 1, 1, 1, 1, 1, 1, 1}, // timer on value
+    {1, 1, 1, 1, 1, 0, 1, 1}, // 0x20
+    
+    //{1, 1, 0, 1, 0, 1, 1, 1} // w8 + w16 = XX00H
+    {0, 0, 0, 0, 0, 1, 0, 1} // w8 ~ 16 = XX00H
 };
 
-int messageOff[7][8] = {
-{1, 1, 0, 1, 0, 1, 1, 1}, // marker code M1
-{0, 0, 1, 1, 1, 0, 0, 1}, // marker code M2
-{1, 1, 1, 1, 1, 1, 1, 1}, // marker code Parity P
-{1, 1, 1, 1, 0, 1, 1, 1}, // custom code C1
-{1, 1, 1, 1, 0, 1, 1, 1}, // sub custom code C2
-{1, 0, 1, 1, 1, 1, 1, 1}, // off command
-{0, 1, 0, 0, 0, 0, 0, 0} // checksum
+byte messageOff[7][8] = {
+    {1, 1, 0, 1, 0, 1, 1, 1}, // marker code M1
+    {0, 0, 1, 1, 1, 0, 0, 1}, // marker code M2
+    {1, 1, 1, 1, 1, 1, 1, 1}, // marker code Parity P
+    {1, 1, 1, 1, 0, 1, 1, 1}, // custom code C1
+    {1, 1, 1, 1, 0, 1, 1, 1}, // sub custom code C2
+    {1, 0, 1, 1, 1, 1, 1, 1}, // off command
+    {0, 1, 0, 0, 0, 0, 0, 0} // checksum
 };
+boolean once = false;
 
 void setup()
 {
-    Serial.begin(9600);
-    Serial.print("Starting up");
     pinMode(BUTTON_PIN, INPUT);
     vw_setup(2000);	 // Bits per sec
     vw_set_rx_pin(RX_MODULE_PIN);
@@ -91,7 +89,7 @@ void loop()                           //some demo main code
         digitalWrite(Led, LOW);
     } else if (wasMessageReceived()) {
         digitalWrite(Led, HIGH);
-        if (turnOff == 1) {
+        if (turnOff) {
             IRsendCode(messageOff);
         } else {
             IRsendCode(message);        
@@ -123,7 +121,7 @@ void IRcarrier(unsigned int IRtimemicroseconds)
 }
 
 //Sends the IR code in 16 byte NEC format
-void IRsendCode(int message[16][8])
+void IRsendCode(byte message[16][8])
 {
   //send the leading pulse
   IRcarrier(3340);            //3.2ms of carrier
@@ -133,7 +131,7 @@ void IRsendCode(int message[16][8])
   for (int m = 0; m < 16; m++) {
         for (int i = 0; i < 8; i++) {
             IRcarrier(BITtime);                     //turn on the carrier for one bit time
-            if (message[m][i] == 1)        //get the current bit
+            if (message[m][i] == 1)                 //not inverted bit
               delayMicroseconds(BITOnTIME);        //a LOW is only 1 bit time period
             else
               delayMicroseconds(BITOffTIME);    //a HIGH is 3 bit time periods
@@ -162,55 +160,70 @@ boolean wasMessageReceived()
 	uint8_t buf[VW_MAX_MESSAGE_LEN] = "";
 	uint8_t buflen = VW_MAX_MESSAGE_LEN;
 	boolean rightString = false;
-  
 	if (vw_get_message(buf, &buflen)) {
-            Serial.print((char*)buf);
-            Serial.print(",");
-            Serial.println(strlen((char*)buf));
             if (strlen((char*)buf) == 1 && buf[0] == off) {
-                turnOff = 1;
+                turnOff = true;
                 rightString = true;
             } else if (strlen((char*)buf) == 4 && buf[0] == on) {
-                turnOff = 0;
-                if (tryToComposeMessage) {
-                    populateTemperatureArray(buf[1]);
-                    populateFanMode(buf[2]);
-                    populateSpeedMode(buf[3]);
-                }
+                turnOff = false;
+                sumTillNow = 0x50;             
+                populateTemperatureArray(buf[1]);
+                populateFanMode(buf[2]);
+                populateFanSpeed(buf[3]);
+                populateChecksum();
                 rightString = true;
             }
 	}
 	return rightString;
 }
 
-// {0, 1, 1, 1, 0, 1, 0, 1}, // chart A - TEMP=B4-B7, B0=wasON? 1 yes 0 no
 void populateTemperatureArray(char code) {
+      int converted = hex2int(code);
+      converted *= 16; // shift right 4 bits
+
+      sumTillNow += converted;
+      
       for (int i = 4; i < 8; i++) {
-          message[TEMPERATURE][i] = bitRead(code, i - 4) == 1 ? 0 : 1;
+          message[TEMPERATURE][i] = bitRead(converted, i) == 1 ? 0 : 1;
       }
 }
 
 void populateFanMode(char code) {
-      long converted = hex2int(code);
-      for (int i = 0; i < 3; i++) {
+      int converted = hex2int(code);
+      sumTillNow += converted;
+      
+      for (int i = 0; i < 4; i++) {
           message[FAN_MODE][i] = bitRead(converted, i) == 1 ? 0 : 1;
       }
 }
 
-void populateSpeedMode(char code) {
-      long converted = hex2int(code);
-      for (int i = 0; i < 3; i++) {
-          message[SPEED_MODE][i] = bitRead(converted, i) == 1 ? 0 : 1;
+void populateFanSpeed(char code) {
+      int converted = hex2int(code);
+      sumTillNow += converted;
+      
+      for (int i = 0; i < 4; i++) {
+          message[FAN_SPEED][i] = bitRead(converted, i) == 1 ? 0 : 1;
       }
 }
 
-unsigned long hex2int(char a)
-{
-    unsigned long val = 0;
+void populateChecksum() {
+    for (int i = 0; i < 8; i++) {
+        message[CHECKSUM][i] = bitRead(sumTillNow, i);
+    }
+}
 
-       if(a <= 57)
-        val += (a-48)*(1<<(4));
-       else
-        val += (a-55)*(1<<(4));
-    return val;
+
+int hex2int(char c) {
+    int cInt = c - '0';
+    if (cInt >= 0 && cInt <= 9) {
+        return cInt;
+    } else {
+        c = toupper(c);
+        if (c == 'A') {return 10;} 
+        else if (c == 'B') {return 11;} 
+        else if (c == 'C') {return 12;} 
+        else if (c == 'D') {return 13;} 
+        else if (c == 'E') {return 14;} 
+        else if (c == 'F') {return 15;}
+    }
 }
