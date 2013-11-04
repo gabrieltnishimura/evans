@@ -26,12 +26,10 @@ public class BehaviorNavigator extends HttpServlet {
      */
     public BehaviorNavigator() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-    	// TODO Auto-generated method stub
     	super.init(config);
     	this.nodeManager = new BehaviorNodeManager();
     }

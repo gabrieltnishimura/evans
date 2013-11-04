@@ -8,7 +8,6 @@ public class ReportBehavior extends BehaviorNode {
 
 	public ReportBehavior(int id, String name, List<String> responseWhenAccessed) {
 		super(id, name, responseWhenAccessed);
-		// TODO Auto-generated constructor stub
 	}
 
 	public ReportBehavior(ObjectId internalId) {

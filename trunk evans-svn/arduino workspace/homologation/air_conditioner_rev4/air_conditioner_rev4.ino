@@ -1,14 +1,25 @@
-//*****************************************
-// NEC (Japanese) Infrared code sending library for the Arduino
-// Send a standard NEC 4 byte protocol direct to an IR LED on the define pin
-// Assumes an IR LED connected on I/O pin to ground, or equivalent driver.
-// Tested on a Freetronics Eleven Uno compatible
-// License: Creative Commons CC BY
-//*****************************************
+/** R4 revision's making all changes modular.
+ * Changes in temperature, fan speed and fan mode are all
+ * accounted in the checksum, therefore the air conditioner
+ * can work in all possible combinations of those parameters
+ * mentioned before.
+ * There must be some advices when trying to compose a more 
+ * complete message, such as:
+ * - The message itself is on a inverted bit logic. For instance,
+ * Marker Code M1 represents 0x14 hex number, which is B00101000.
+ * But the message itself sends a inverted B11010111 word.
+ * Just make sure all bits are inverted before making arithmetical
+ * operations.
+ * - The checksum word is NOT inverted. Notice that if the message 
+ * is one bit different from what it should be, it won't work.
+ * - Almost sure BITOnTime should be 1200 and BITOfftime should be
+ * 390. It's working, so why change? Refer to NEC Infrared 
+ * Transmission Protocol
+ */
 #include <VirtualWire.h>
 #define IRLEDpin  2              //the arduino pin connected to IR LED to ground. HIGH=LED ON
 #define BITtime   416            //length of the carrier bit in microseconds
-#define Led 5
+#define DEBUG_LED 5
 #define BITOnTIME 390
 #define BITOffTIME 1200
 
@@ -42,22 +53,14 @@ byte message[16][8] = {
     {1, 0, 0, 0, 0, 0, 0, 0}, // command code D
     {0, 1, 1, 0, 1, 1, 1, 1}, // 0x09
     {1, 1, 1, 1, 0, 0, 1, 1}, // 0x30
-    
-    // word 8
     {0, 1, 1, 1, 0, 1, 0, 1}, // chart A - TEMP=B4-B7, B0=wasON? 1 yes 0 no
-    
     {1, 1, 1, 1, 1, 1, 1, 1}, // chart C -
     {1, 1, 1, 1, 1, 1, 1, 1}, // chart B && E
-    
-    //{1, 1, 0, 1, 1, 1, 1, 1}, // chart D - FAN
     {1, 1, 1, 1, 1, 1, 1, 1}, // chart D - FAN
-    
     {1, 1, 1, 1, 1, 1, 1, 1}, // timer off value
     {1, 1, 1, 1, 1, 1, 1, 1}, // timer on value
     {1, 1, 1, 1, 1, 0, 1, 1}, // 0x20
-    
-    //{1, 1, 0, 1, 0, 1, 1, 1} // w8 + w16 = XX00H
-    {0, 0, 0, 0, 0, 1, 0, 1} // w8 ~ 16 = XX00H
+    {0, 0, 0, 0, 0, 1, 0, 1} // w8 ~ 16 = populateChecksum() rewrites it  
 };
 
 byte messageOff[7][8] = {
@@ -74,35 +77,30 @@ boolean once = false;
 void setup()
 {
     pinMode(BUTTON_PIN, INPUT);
+    pinMode(IRLEDpin, OUTPUT);
+    pinMode(DEBUG_LED, OUTPUT);           // debugging purposes
+    digitalWrite(IRLEDpin, LOW);
     vw_setup(2000);	 // Bits per sec
     vw_set_rx_pin(RX_MODULE_PIN);
     vw_set_tx_pin(TX_MODULE_PIN);
     vw_rx_start();
-    IRsetup();                          //Only need to call this once to setup
 }
 
 void loop()                           //some demo main code
 {
     if(wasButtonPressed()) {
-        digitalWrite(Led, HIGH);
+        digitalWrite(DEBUG_LED, HIGH);
         IRsendCode(message); 
-        digitalWrite(Led, LOW);
+        digitalWrite(DEBUG_LED, LOW);
     } else if (wasMessageReceived()) {
-        digitalWrite(Led, HIGH);
+        digitalWrite(DEBUG_LED, HIGH);
         if (turnOff) {
             IRsendCode(messageOff);
         } else {
             IRsendCode(message);        
         }
-        digitalWrite(Led, LOW);
+        digitalWrite(DEBUG_LED, LOW);
     }
-}
-
-void IRsetup(void)
-{
-  pinMode(IRLEDpin, OUTPUT);
-  pinMode(Led, OUTPUT);
-  digitalWrite(IRLEDpin, LOW);    //turn off IR LED to start
 }
 
 // Ouput the 38KHz carrier frequency for the required time in microseconds
@@ -120,24 +118,24 @@ void IRcarrier(unsigned int IRtimemicroseconds)
     }
 }
 
-//Sends the IR code in 16 byte NEC format
 void IRsendCode(byte message[16][8])
 {
-  //send the leading pulse
-  IRcarrier(3340);            //3.2ms of carrier
+  // LEAD
+  IRcarrier(3340);            //3.3ms of carrier
   delayMicroseconds(1570);    //1.5ms of silence
   
-  //send the user defined 4 byte/32bit code
+  //the message itself
   for (int m = 0; m < 16; m++) {
         for (int i = 0; i < 8; i++) {
             IRcarrier(BITtime);                     //turn on the carrier for one bit time
-            if (message[m][i] == 1)                 //not inverted bit
-              delayMicroseconds(BITOnTIME);        //a LOW is only 1 bit time period
+            if (message[m][i] == 1)
+              delayMicroseconds(BITOnTIME);         //a HIGH is only 1 bit time period
             else
-              delayMicroseconds(BITOffTIME);    //a HIGH is 3 bit time periods
+              delayMicroseconds(BITOffTIME);        //a LOW is 3 bit time periods
         }
   }
   
+  // TRAIL
   IRcarrier(BITOnTIME+40);                 //send a single STOP bit.
 }
 

@@ -13,7 +13,6 @@ public class MusicBehavior extends BehaviorNode {
 
 	public MusicBehavior(int id, String name, List<String> responseWhenAccessed) {
 		super(id, name, responseWhenAccessed);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public MusicBehavior(ObjectId internalId) {
@@ -27,21 +26,18 @@ public class MusicBehavior extends BehaviorNode {
 			try {
 				repository.proccesNode(super.getName(), "", "", "", true);
 			} catch (NamingException | IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else if (parameters.size() == 1 && parameters.get(0).equals("off")) {
 			try {
 				repository.proccesNode(super.getName(), "", "", "", true);
 			} catch (NamingException | IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else if (parameters.isEmpty()) {
 			try {
 				repository.proccesNode(super.getName(), "", "", "", true);
 			} catch (NamingException | IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {

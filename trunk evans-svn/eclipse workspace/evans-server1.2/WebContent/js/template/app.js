@@ -41,7 +41,7 @@ var App = function () {
         if (isIE10) {
             jQuery('html').addClass('ie10'); // detect IE10 version
         }
-    }
+    };
 
     var handleDesktopTabletContents = function () {
         // loops all page elements with "responsive" class and applies classes for tablet mode
@@ -69,14 +69,14 @@ var App = function () {
                 }
             });
         }
-    }
+    };
 
     var handleSidebarState = function () {
         // remove sidebar toggler if window width smaller than 900(for table and phone mode)
         if ($(window).width() < 980) {
             $('body').removeClass("page-sidebar-closed");
         }
-    }
+    };
 
     var runResponsiveHandlers = function () {
         // reinitialize other subscribed elements
@@ -84,7 +84,7 @@ var App = function () {
             var each = responsiveHandlers[i];
             each.call();
         }
-    }
+    };
 
     var handleResponsive = function () {
         handleTooltips();
@@ -94,13 +94,13 @@ var App = function () {
         handleChoosenSelect();
         handleFixedSidebar();
         runResponsiveHandlers();
-    }
+    };
 
     var handleResponsiveOnInit = function () {
         handleSidebarState();
         handleDesktopTabletContents();
         handleSidebarAndContentHeight();
-    }
+    };
 
     var handleResponsiveOnResize = function () {
         var resize;
@@ -128,7 +128,7 @@ var App = function () {
                 }, 50); // wait 50ms until window resize finishes.
             });
         }   
-    }
+    };
 
     //* BEGIN:CORE HANDLERS *//
     // this function handles responsive layout on screen size resize or mobile device rotate.
@@ -154,7 +154,7 @@ var App = function () {
                 content.attr('style', 'min-height:' + height + 'px !important');
             } 
         }          
-    }
+    };
 
     var handleSidebarMenu = function () {
         jQuery('.page-sidebar').on('click', 'li > a', function (e) {
@@ -240,7 +240,7 @@ var App = function () {
                     async: false
                 });
         });
-    }
+    };
 
     var _calculateFixedSidebarViewportHeight = function () {
         var sidebarHeight = $(window).height() - $('.header').height() + 1;
@@ -249,7 +249,7 @@ var App = function () {
         }
 
         return sidebarHeight; 
-    }
+    };
 
     var handleFixedSidebar = function () {
         var menu = $('.page-sidebar-menu');
@@ -281,7 +281,7 @@ var App = function () {
             });
             handleSidebarAndContentHeight();
         }
-    }
+    };
 
     var handleFixedSidebarHoverable = function () {
         if ($('body').hasClass('page-sidebar-fixed') === false) {
@@ -319,7 +319,7 @@ var App = function () {
                 $(this).removeClass('page-sidebar-hovering');
             });
         });
-    }
+    };
 
     var handleSidebarToggler = function () {
         // handle sidebar show/hide
@@ -379,7 +379,7 @@ var App = function () {
                     window.location.href = "extra_search.html";
             }
         });
-    }
+    };
 
     var handleHorizontalMenu = function () {
         //handle hor menu search form toggler click
@@ -407,7 +407,7 @@ var App = function () {
                     return false;
                 }
             });
-    }
+    };
 
     var handleGoTop = function () {
         /* set variables locally for increased performance */
@@ -415,7 +415,7 @@ var App = function () {
             App.scrollTo();
             e.preventDefault();
         });
-    }
+    };
 
     var handlePortletTools = function () {
         jQuery('body').on('click', '.portlet > .portlet-title > .tools > a.remove', function (e) {
@@ -443,7 +443,7 @@ var App = function () {
                 el.slideDown(200);
             }
         });
-    }
+    };
 
     var handleUniform = function () {
         if (!jQuery().uniform) {
@@ -458,7 +458,7 @@ var App = function () {
                 }
             });
         }
-    }
+    };
 
     var handleAccordions = function () {
         $(".accordion").collapse().height('auto');
@@ -473,7 +473,7 @@ var App = function () {
                 scrollTop: lastClicked.offset().top - 150
             }, 'slow');
         });
-    }
+    };
 
     var handleTabs = function () {
 
@@ -525,7 +525,7 @@ var App = function () {
                         disableFadeOut: true
                     });
             });
-    }
+    };
 
     var handleTooltips = function () {
         if (App.isTouchDevice()) { // if touch device, some tooltips can be skipped in order to not conflict with click events
@@ -533,13 +533,13 @@ var App = function () {
         } else {
             jQuery('.tooltips').tooltip();
         }
-    }
+    };
 
     var handleDropdowns = function () {
         $('body').on('click', '.dropdown-menu.hold-on-click', function(e){
             e.stopPropagation();
         })
-    }
+    };
 
     var handleModal = function () {
         // this function adds .modal-open class to body element for select2 and chosen dropdown hacks
@@ -556,7 +556,7 @@ var App = function () {
                 $('body').removeClass('modal-open');
             }
         });
-    }
+    };
 
     var handlePopovers = function () {
         jQuery('.popovers').popover();
@@ -568,7 +568,7 @@ var App = function () {
                 lastPopedPopover.popover('hide');
             } 
         });
-    }
+    };
 
     var handleChoosenSelect = function () {
         if (!jQuery().chosen) {
@@ -580,7 +580,7 @@ var App = function () {
                 allow_single_deselect: $(this).attr("data-with-deselect") == "1" ? true : false
             });
         });
-    }
+    };
 
     var handleFancybox = function () {
         if (!jQuery.fancybox) {
@@ -600,7 +600,7 @@ var App = function () {
                 }
             });
         }
-    }
+    };
 
     var handleTheme = function () {
 
