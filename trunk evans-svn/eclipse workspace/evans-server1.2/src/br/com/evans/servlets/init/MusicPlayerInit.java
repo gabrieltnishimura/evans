@@ -21,7 +21,6 @@ public class MusicPlayerInit extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-    	// TODO Auto-generated method stub
     	super.init(config);
 		Context initCtx;
 		try {
@@ -38,14 +37,12 @@ public class MusicPlayerInit extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 
 	}
 

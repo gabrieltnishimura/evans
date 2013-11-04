@@ -1,5 +1,7 @@
 /**
  * Program for the arduino connected to the serial
+ * Receives and sends messages from/to others appliances, 
+ * monitors temperature. Needed
  */
 #include <VirtualWire.h>
 #define BUTTON_PIN 3
@@ -7,6 +9,7 @@
 #define TX_MODULE_PIN 13
 #define MAX_WORD_LENGTH 40
 #define aref_voltage 3.3         // we tie 3.3V to ARef and measure it with a multimeter!
+#define TEMPERATURE_PIN 1
 
 // button stuff
 int readingButton;           // the current reading from the input pin
@@ -28,10 +31,8 @@ char msg[MAX_WORD_LENGTH];
 
 
 boolean measureTemperature = true;
-int tempPin = 1;        //the analog pin the TMP36's Vout (sense) pin is connected to
-                        //the resolution is 10 mV / degree centigrade with a
-                        //500 mV offset to allow for negative temperatures
 int tempReading;        // the analog reading from the sensor
+float lastTemp;
 
 void setup() {
     Serial.begin(9600);
@@ -44,30 +45,26 @@ void setup() {
     vw_rx_start();
     
     analogReference(EXTERNAL); // TEMPERATURE READING
+    lastTemp = ((analogRead(TEMPERATURE_PIN) * aref_voltage) / (1024.0) - 0.5) * 100;
 }
 
 void loop() {
     if (wasButtonPressed()) {
         sendMessage("o");
     } else if (measureTemperature) {
-        tempReading = analogRead(tempPin);  
-       
-        Serial.print("Temp reading = ");
-        Serial.print(tempReading);     // the raw analog reading
-        // converting that reading to voltage, which is based off the reference voltage
-        float voltage = tempReading * aref_voltage;
-        voltage /= 1024.0; 
-       
-        // print out the voltage
-        Serial.print(" - ");
-        Serial.print(voltage); Serial.println(" volts");
-       
-        // now print out the temperature
-        float temperatureC = (voltage - 0.5) * 100 ;  //converting from 10 mv per degree wit 500 mV offset
+        tempReading = analogRead(TEMPERATURE_PIN);  
+
+        float temperatureC = ((tempReading * aref_voltage) / (1024.0) - 0.5) * 100 ;  //converting from 10 mv per degree wit 500 mV offset
                                                      //to degrees ((volatge - 500mV) times 100)
-        Serial.print(temperatureC); Serial.println(" degrees C");
-       
-        // now convert to Fahrenheight - if needed
+
+        if (temperatureC > lastTemp && temperatureC - lastTemp > 1) {
+            lastTemp = temperatureC;
+            Serial.print("temp_");Serial.println(temperatureC);
+        } else if (lastTemp > temperatureC && lastTemp - temperatureC > 1) {
+            lastTemp = temperatureC;
+            Serial.print("temp_");Serial.println(temperatureC);
+        }
+         // now convert to Fahrenheight - if needed
         /** float temperatureF = (temperatureC * 9.0 / 5.0) + 32.0;
         Serial.print(temperatureF); Serial.println(" degrees F"); */
     }

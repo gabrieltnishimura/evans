@@ -1,4 +1,5 @@
 <html class=" -webkit-">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="br.com.evans.behavior.nodes.manager.BehaviorNodeManager"%>
 <%@page import="br.com.evans.behavior.nodes.core.BehaviorNode"%>
 	<head>
@@ -28,34 +29,28 @@
 	</head>
 
 	<body style="">
-	        <%
-	        	BehaviorNodeManager manager = new BehaviorNodeManager();
-		        BehaviorNode parent = manager.getParent();
-	        
-		        int i = 0;
-	        %>
 	        <div style="float: left;">
 				<nav class="GUI">
 					<ul class="GUI-list">
-				 	<% for (BehaviorNode node : parent.getChilds()) { %>
-				    	<li class="GUI-list-item node_each node<%= i %>">
-				    		<a style="cursor: pointer;" class="parent_node">
-					        	<span class="fontawesome-angle-right icon"></span>
-				        		<span class="label"><%= node.getName() %></span>  
-				      		</a>
-				   			<ul>
-								<% int j = 0; for (BehaviorNode inner_node : node.getChilds()) { %>
-				    	    	<li><a href="javascript:void(0)" onclick="$.ajax({type:'GET',url:'<%= inner_node.getLink() %>'});" 
-				    	    	style="cursor: pointer;" ><%= inner_node.getName() %></a></li>
-				    			<% j++;} %>
-				    			<li><a href="javascript:void(0)" onclick="addNode();" >+ add node</a></li>
-				     		 </ul>
-				   		 </li>
-					  <% i++;} %>
-					  </ul>
+						<c:forEach items="${childs}" var="parents" varStatus="status" begin="0">
+					    	<li class="GUI-list-item node_each node${status.index}">
+					    		<a style="cursor: pointer;" class="parent_node">
+						        	<span class="fontawesome-angle-right icon"></span>
+					        		<span class="label">${parents.name}</span>  
+					      		</a>
+					   			<ul>
+					   				<c:forEach items="${parents.childs}" var="childs">
+						    	    	<li><a href="javascript:void(0)" onclick="$.ajax({type:'GET',url:'${childs.link}'});" 
+						    	    	style="cursor: pointer;" >${childs.name}</a></li>
+					    	    	</c:forEach>
+					    			<li><a href="javascript:void(0)" onclick="addNode();" >+ add node</a></li>
+					     		 </ul>
+					   		 </li>
+						</c:forEach>
+					</ul>
 				</nav>
 			</div>
-			<div style="float: left;">
+			<div id="console" style="float: left;">
 				evans console
 			</div>
 	</body>

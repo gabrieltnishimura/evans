@@ -23,7 +23,6 @@ public class DeviceMonitorInit extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-    	// TODO Auto-generated method stub
     	super.init(config);
 		Context initCtx;
 		try {

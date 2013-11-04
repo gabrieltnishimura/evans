@@ -8,8 +8,8 @@ import java.util.Enumeration;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import br.com.evans.devices.arduino.AirConditioner;
 import br.com.evans.jndi.states.DeviceMonitor;
-
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
@@ -122,13 +122,22 @@ public enum ArduinoConnection implements SerialPortEventListener {
 				System.out.println("[SERIAL] Received from arduino: '" + received + "'");
 				
 				Context initCtx = new InitialContext();
-    			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-    			
-    			//received data from serial - a device changed states
-    			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
-    			deviceMonitor.setSerialAnswer(true);
-    			deviceMonitor.setFeedback(received.substring(received.length() - 1, received.length()));
-    			System.out.println("[STATUS] Setting feedback from serial as '"+received+"'");
+    			Context envCtx = (Context) initCtx.lookup("java:comp/env"); // must initialize context, do something with feedback
+				
+				if (received.contains("temp")) { //TODO feedback location (device) and temperature
+					String[] temp = received.split("_|\\.");
+						if (temp != null && temp[0] != null) {
+			    			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
+			    			((AirConditioner) deviceMonitor.getDevice("air conditioner")).controlTemperature(Integer.parseInt(temp[1]));
+			    			System.out.println("[STATUS] Received temperature change feedback '"+temp[1]+"'");
+						}
+				} else {
+	    			//received data from serial - a device changed states (not on temperature format)
+	    			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
+	    			deviceMonitor.setSerialAnswer(true);
+	    			deviceMonitor.setFeedback(received.substring(received.length() - 1, received.length()));
+	    			System.out.println("[STATUS] Setting feedback from serial as '"+received+"'");
+				}
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}

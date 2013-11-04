@@ -23,7 +23,6 @@ public class Logoff extends HttpServlet {
      */
     public Logoff() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**

@@ -20,7 +20,6 @@ public class CommandRepository {
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
 			deviceMonitor.getDevice(mapLocation).switchStates();	
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -35,7 +34,6 @@ public class CommandRepository {
 			deviceMonitor.getDevice(mapLocation).switchStates();	
 			
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
