@@ -6,6 +6,8 @@ import java.util.Date;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 
+import br.com.evans.notifications.core.Notifications;
+
 import com.mongodb.Mongo;
 
 public class InsertTests {
@@ -18,7 +20,7 @@ public class InsertTests {
 			MongoCollection taskList = jongo.getCollection("tasks");
 			taskList.save(task);
 		} catch (UnknownHostException e) {
-			System.out.println("[EXCEPTION] Couldn't create MongoDB connection");
+			System.out.println(Notifications.EXCEP_MONGODB_CONNECTION);
 			e.printStackTrace();
 		}
 	}

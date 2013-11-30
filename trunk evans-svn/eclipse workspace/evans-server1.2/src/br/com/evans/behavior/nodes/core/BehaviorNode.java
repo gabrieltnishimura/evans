@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import br.com.evans.notifications.core.Notifications;
+
 /**
  * Every time the user enters a node [using ajax]
  * it should return the info to navigate to child nodes
@@ -110,7 +112,7 @@ public class BehaviorNode  implements Executable {
 	@Override
 	public void execute(List<String> parameters) {
 		// implement this on later classes
-		System.out.println("[EXCEPTION] Can't execute method on non edges");
+		System.out.println(Notifications.ERROR_NON_EDGE_EXECUTION);
 	}
 
 	public List<String> getResponses() {

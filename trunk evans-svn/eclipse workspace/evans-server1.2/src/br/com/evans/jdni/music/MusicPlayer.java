@@ -1,19 +1,18 @@
 package br.com.evans.jdni.music;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import org.jongo.MongoCollection;
 
-import br.com.evans.jndi.db.MongoDBConnection;
+import br.com.evans.dao.musics.MusicObject;
+import br.com.evans.jndi.manager.JNDIManager;
+import br.com.evans.music.mp3spi.core.MusicManager;
+import br.com.evans.notifications.core.Notifications;
+
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 
 
 /**
@@ -25,82 +24,39 @@ import com.mongodb.DBCollection;
  */
 public enum MusicPlayer { // singleton
 	INSTANCE;
-	private static final String TASKLIST = "tasklist";
-	private static final String KILL = "taskkill /F /IM ";
+	
+	private MusicManager manager;
 	
 	MusicPlayer() {
-		System.out.println("[STATUS] Created Music Player (singleton)");
+		System.out.println(Notifications.NOTIF_CREATED_PLAYER_SINGLETON);
+		this.manager = new MusicManager();
 	}
 	
-	public void outputToTextFile(List<String> musicPaths, int device) throws IOException {
-				
-		File file = new File("C:\\Users\\Public\\evans\\multi\\multiOut.txt");
-		file.delete();
+	public List<String> getMusicList() {
+
+		DBCollection coll = JNDIManager.getMongoCollection("musics");
 		
-		file = new File("C:\\Users\\Public\\evans\\multi\\multiOut.txt");
-		FileWriter writer = null;
-		PrintWriter printer = null;
-		try {
-		    writer = new FileWriter(file, true);
-		    printer = new PrintWriter(writer);
-		    /*printer.append("2\n");
-		    printer.append("2 C:\\yes.mp3\n");
-		    printer.append("1 C:\\Users\\Gabriel\\Desktop\\test.mp3\n");*/
-		    
-		} catch (IOException e) {
-			System.out.println("[EXCEPTION] Couldn't create file multiOut.txt");
-			e.printStackTrace();
+		List<DBObject> list = coll.find().toArray();
+		Iterator<DBObject> it = list.iterator();
+		
+		List<String> returnList = new ArrayList<String>();
+		
+		while(it.hasNext()) {
+			returnList.add((String) it.next().get("directory"));
 		}
-
-		Context initCtx;
-		try {
-			initCtx = new InitialContext();
-			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-			MongoDBConnection mongo = (MongoDBConnection) envCtx.lookup("db/MongoDBConnectionFactory"); 
-			DBCollection coll = mongo.getCollection("musics");
-			
-			printer.append("1\n");
-			printer.append("1 " + coll.findOne().get("directory"));
-			printer.close();
-			
-        } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of ArduinoFactory");
-			e.printStackTrace();
-		}
-	
-	}
-
-	public static boolean isProcessRunning(String serviceName) throws IOException   {
-		Process p = Runtime.getRuntime().exec(TASKLIST);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			if (line.contains(serviceName)) {
-				System.out.println("[STATUS] Service was running and is being terminated");
-				return true;
-			}
-		}
-		return false;
-	}
-	public static void killProcess(String serviceName) throws IOException {
-		Runtime.getRuntime().exec(KILL + serviceName);
+		
+		return returnList;
 	}
 	
-	public void playMusic() throws IOException {
-		System.out.println("[Trying to run multi.exe now]");
-		try {
-			if (isProcessRunning("multi.exe")) {
-				killProcess("multi.exe");
-			}
-	        try { /* wait until killed instance of multi.exe */
-	            Thread.sleep(200);
-	        } catch (InterruptedException ex) {
-	        	System.out.println("[EXCEPTION] Couldn't wait 300 ms to kill process.");
-	        }
-	        
-			Runtime.getRuntime().exec("C:\\Users\\Public\\evans\\multi\\multi.exe");
-		} catch(IOException ex) {
-			System.out.println("[EXCEPTION] Couldn't execute program");
+	public void setPlaylist(String fromPlaylist, Integer toRoomCode) {
+		MongoCollection musics = JNDIManager.getJongoCollection("musics");
+		Iterator<MusicObject> it = (Iterator<MusicObject>) musics.find().as(MusicObject.class).iterator();
+		while(it.hasNext()) {
+			this.manager.addFileToRoom(0, it.next().getDirectory());
 		}
+	}
+	
+	public void playMusic(Integer roomCode) {
+		this.manager.playRoom(roomCode);
 	}
 }

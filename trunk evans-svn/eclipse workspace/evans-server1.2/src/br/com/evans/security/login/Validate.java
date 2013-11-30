@@ -7,6 +7,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import br.com.evans.jndi.db.MongoDBConnection;
+import br.com.evans.notifications.core.Notifications;
 import br.com.evans.security.encryption.Digest;
 
 import com.mongodb.BasicDBObject;
@@ -41,7 +42,7 @@ public class Validate {
 			}
 			
         } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of MongoDBFactory, couldn't get node");
+        	System.out.println(Notifications.EXCEP_MONGODB_CONTEXT + "couldn't query for the user.");
 			e.printStackTrace();
 		}
 		

@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 
 import br.com.evans.devices.arduino.RfCoded;
 import br.com.evans.devices.core.Device;
+import br.com.evans.notifications.core.Notifications;
 
 public class SerialAnswerMonitor {
 	public SerialAnswerMonitor() {
@@ -30,18 +31,17 @@ public class SerialAnswerMonitor {
 				    	for(Map.Entry<Integer, Device> entry : deviceMonitor.getStatesTreeMap().entrySet()) {
 			    			Device value = entry.getValue();
 			    			if (value instanceof RfCoded && ((RfCoded) value).getFeedbackId().equals(feedback.toLowerCase())) {
+			    				System.out.println(Notifications.NOTIF_SWITCHING_VIRTUAL_STATUS);
 			    					if (!value.getDeviceStatus() && Character.isUpperCase(feedback.charAt(0))) {
-			    						System.out.println("[STATUS] Getting Device Monitor feedback and only switching virtual status.");
 			    						((RfCoded) value).switchStatesFromFeedBack();				    				  
 			    				} else if (value.getDeviceStatus() && Character.isLowerCase(feedback.charAt(0))) {
-									 	System.out.println("[STATUS] Getting Device Monitor feedback and only switching virtual status.");
 										((RfCoded) value).switchStatesFromFeedBack();
 								}
 							}
 				    	}
 	    			}
 				} catch (NamingException e) {
-		        	System.out.println("[EXCEPTION] Problem when trying to load the context of Serial Answer Monitoring");
+		        	System.out.println(Notifications.EXCEP_DEVICEMONITOR_CONTEXT + "(Serial Answer Monitoring)");
 		        	System.out.println("Killing [" + Thread.currentThread().getName() + "] thread to stop exception propagating.");
 		        	Thread.currentThread().interrupt();
 					e.printStackTrace();

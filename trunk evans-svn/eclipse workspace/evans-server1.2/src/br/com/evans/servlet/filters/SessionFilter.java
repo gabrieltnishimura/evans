@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import br.com.evans.notifications.core.Notifications;
 import br.com.evans.security.login.CookieManager;
 
 public class SessionFilter implements Filter {
@@ -29,14 +30,17 @@ public class SessionFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
-		
 		String url = request.getServletPath();
 		boolean allowedRequest = false;
 		
-		if (this.urlList.contains(url) || url.contains("/css") || url.contains(".ico") || 
-				url.contains("/js") || url.contains("/plugins") || url.contains("/img") || url.contains("/Login")) {
-			allowedRequest = true;
+		for (String inner : urlList) {
+			if (url.contains(inner)) {
+				allowedRequest = true;				
+			}
 		}
+		/*if (this.urlList.contains(url)) {
+			allowedRequest = true;
+		}*/
 		
 		if (!allowedRequest && !CookieManager.isCookieValidForUser(request)) { // is not on the allow list AND is not a cookie user
 			HttpSession session = request.getSession(false);
@@ -53,7 +57,7 @@ public class SessionFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		System.out.println("[STATUS] Initialized session filter for login filtering.");
+		System.out.println(Notifications.NOTIF_SESSION_FILTER_STARTED);
 		
 		String urls = config.getInitParameter("avoid-urls");
 		StringTokenizer token = new StringTokenizer(urls, ",");

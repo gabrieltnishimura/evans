@@ -1,10 +1,13 @@
 package br.com.evans.jndi.arduino;
 
 import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.spi.ObjectFactory;
+
+import br.com.evans.notifications.core.Notifications;
 
 @SuppressWarnings("rawtypes") 
 public class ArduinoConnectionFactory implements ObjectFactory {
@@ -14,7 +17,7 @@ public class ArduinoConnectionFactory implements ObjectFactory {
 		try {
 			Thread.sleep(1800); // the arduino takes some time to initialize and send some rf waves
 		} catch (InterruptedException e) {
-			System.out.println("[EXCEPTION] Problem during thread sleeping in ArduinoFactory");
+			System.out.println(Notifications.EXCEP_SLEEP + "ArduinoFactory");
 			e.printStackTrace();
 		}
 	}

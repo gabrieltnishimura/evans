@@ -7,6 +7,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import br.com.evans.jdni.music.MusicPlayer;
+import br.com.evans.jndi.manager.JNDIManager;
 import br.com.evans.jndi.states.DeviceMonitor;
 
 public class CommandRepository {
@@ -18,7 +19,7 @@ public class CommandRepository {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 			//Get the device monitor so it can get device states
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
-			deviceMonitor.getDevice(mapLocation).switchStates();	
+			deviceMonitor.getDevice(mapLocation).switchStates();
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
@@ -31,7 +32,7 @@ public class CommandRepository {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 			//Get the device monitor so it can get device states
 			DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
-			deviceMonitor.getDevice(mapLocation).switchStates();	
+			deviceMonitor.getDevice(mapLocation).switchStates();
 			
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -39,13 +40,13 @@ public class CommandRepository {
 	}
 	
 	public void proccesNode(String music, String artist, String album, String playlist, boolean shuffle) throws IOException, NamingException {
-		Context initCtx = new InitialContext();
-		Context envCtx = (Context) initCtx.lookup("java:comp/env");
-		
-		//Get the device monitor so it can get the player
-		MusicPlayer musicPlayer = (MusicPlayer) envCtx.lookup("music/MusicPlayerFactory");
-		musicPlayer.outputToTextFile(null, 1);
-		musicPlayer.playMusic();
+		MusicPlayer musicPlayer = JNDIManager.getMusicPlayer();
+		//musicPlayer.outputToTextFile(null, 1); // @deprecated since new implementation
+		//musicPlayer.getMusicList();
+		String playlistId = "";
+		int toRoomCode = 0;
+		musicPlayer.setPlaylist(playlistId, toRoomCode);
+		musicPlayer.playMusic(toRoomCode);
 	}
 	
 	public void proccesNode(String report, String specs) throws NamingException {

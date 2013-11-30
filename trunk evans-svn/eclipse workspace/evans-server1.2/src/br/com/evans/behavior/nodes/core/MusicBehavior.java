@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 import org.bson.types.ObjectId;
 
 import br.com.evans.command.repository.CommandRepository;
+import br.com.evans.notifications.core.Notifications;
 
 public class MusicBehavior extends BehaviorNode {
 
@@ -41,7 +42,7 @@ public class MusicBehavior extends BehaviorNode {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("[ERROR] [DeviceBehavior] No valid parameters were passed.");
+			System.out.println(Notifications.ERROR_NO_VALID_PARAM);
 		}
 	}
 	

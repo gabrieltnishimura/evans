@@ -2,6 +2,8 @@ package br.com.evans.jndi.db;
 
 import java.net.UnknownHostException;
 
+import br.com.evans.notifications.core.Notifications;
+
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
@@ -18,9 +20,9 @@ public enum MongoDBConnection {
 		try {
 			this.mongoClient = new Mongo( ADDRESS , PORT );
 			this.database = mongoClient.getDB( DATABASE );
-			System.out.println("[STATUS] Created MongoDB connection.");
+			System.out.println(Notifications.NOTIF_CREATED_MONGODB_SINGLETON);
 		} catch (UnknownHostException e) {
-			System.out.println("[EXCEPTION] Couldn't create MongoDB connection");
+			System.out.println(Notifications.EXCEP_MONGODB_CONNECTION);
 			e.printStackTrace();
 		}
 	}

@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 
 import br.com.evans.jndi.arduino.ArduinoConnection;
 import br.com.evans.jndi.states.DeviceMonitor;
+import br.com.evans.notifications.core.Notifications;
 
 /**
  * Temperature table
@@ -44,7 +45,7 @@ public class AirConditioner extends ArduinoDevice {
 	
 	public AirConditioner(String location, boolean isOn) {
 		super(location, isOn);
-		this.init(21, 1, 1, "test air conditioner", 32); // 21 degrees, auto, auto
+		this.init(21, 1, 4, "test air conditioner", 32); // 21 degrees, auto, auto
 	}
 
 	public AirConditioner(String location, boolean isOn, int initialTemp, int fanMode, int speedMode, String code, int tempAtLocation) {
@@ -84,7 +85,7 @@ public class AirConditioner extends ArduinoDevice {
 			deviceMonitor.setOutdated(true); // notify reverseAjax
 
 		} catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of ArduinoFactory or DeviceMonitorFactory");
+        	System.out.println(Notifications.EXCEP_ARDUINO_OR_DEVICEMONITOR_CONTEXT);
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -104,7 +105,7 @@ public class AirConditioner extends ArduinoDevice {
 			this.speedMode = (int) args[3];
 			updateConfiguration();
 		} else {
-			System.out.println("[ERROR]Couldn't configure air conditioner, null arguments parameters received");
+			System.out.println(Notifications.ERROR_AIRCON_NULL_PARAM);
 		}
 
 	}
@@ -127,7 +128,7 @@ public class AirConditioner extends ArduinoDevice {
 			deviceMonitor.setOutdated(true); // notify reverseAjax
 
 		} catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of ArduinoFactory or DeviceMonitorFactory");
+        	System.out.println(Notifications.EXCEP_ARDUINO_OR_DEVICEMONITOR_CONTEXT);
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -141,12 +142,16 @@ public class AirConditioner extends ArduinoDevice {
 	}
 
 	public void controlTemperature(int currentTemperature) {
-		this.tempAtLocation = currentTemperature;
-	
-		if (this.tempAtLocation > this.temperature && !super.getDeviceStatus()) { // it's damn hot and air conditioner is somehow off
+		if (currentTemperature > this.tempAtLocation && !super.getDeviceStatus()) {
+			this.switchStates();
+		} else if (currentTemperature == this.tempAtLocation && super.getDeviceStatus()) {
+			this.switchStates();
+		}
+		//System.out.println("[STATUS] Was at " + this.temperature + " and needed to be on " + this.tempAtLocation);
+		/*if (this.tempAtLocation > this.temperature && !super.getDeviceStatus()) { // it's damn hot and air conditioner is somehow off
 			this.switchStates();
 		} else if (this.tempAtLocation == this.temperature && super.getDeviceStatus()) { // it's not that hot anymore
 			this.switchStates();
-		}
+		}*/
 	}
 }

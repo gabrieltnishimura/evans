@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import br.com.evans.behavior.nodes.core.BehaviorNode;
+import br.com.evans.notifications.core.Notifications;
 
 /**
  * This class manages nodes. For example on which node the user is
@@ -28,7 +29,7 @@ public class BehaviorNodeManager {
 		for (BehaviorNode node : getCurrentBehavior().getChilds()) {
 			if (node.getName().equals(nameOfBehavior)) {
 				if (node.getChilds().isEmpty()) {
-					System.out.println("[NODES] Node is empty, executing its instruction now.");
+					System.out.println(Notifications.NOTIF_EMPTYNODE_EXEC_INSTRUC);
 					node.execute(new ArrayList<String>());
 				}
 				return this.currentBehavior = node;
