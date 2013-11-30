@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.com.evans.notifications.core.Notifications;
+
 /**
  * Servlet implementation class ArduinoInit
  */
@@ -28,7 +30,7 @@ public class MusicPlayerInit extends HttpServlet {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 			envCtx.lookup("music/MusicPlayerFactory"); // init arduino
         } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of MusicPlayer");
+        	System.out.println(Notifications.EXCEP_PLAYER_CONTEXT + "in initializing servlet");
 			e.printStackTrace();
 		}
     }

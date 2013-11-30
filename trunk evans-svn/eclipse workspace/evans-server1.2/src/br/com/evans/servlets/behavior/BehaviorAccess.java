@@ -29,7 +29,7 @@ public class BehaviorAccess extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	BehaviorNodeManager manager = new BehaviorNodeManager();
-        request.setAttribute("childs", manager.getParent().getChilds()); // Store products in request scope.
+        request.setAttribute("childs", manager.getParent().getChilds()); // Store childs in request scope.
         request.getRequestDispatcher("/behavior_backend.jsp").forward(request, response); // Forward to JSP page to display them in a HTML table
 	}
 

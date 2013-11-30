@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.evans.jndi.states.DeviceMonitor;
+import br.com.evans.notifications.core.Notifications;
 
 /**
  * Servlet implementation class ArduinoInit
@@ -30,7 +31,7 @@ public class DeviceMonitorInit extends HttpServlet {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 			envCtx.lookup("states/DeviceMonitorFactory"); // init deviceMonitor
         } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of DeviceMonitor");
+        	System.out.println(Notifications.EXCEP_DEVICEMONITOR_CONTEXT + "in initializing servlet");
 			e.printStackTrace();
 		}
     }
@@ -54,7 +55,7 @@ public class DeviceMonitorInit extends HttpServlet {
 		DeviceMonitor deviceMonitor = (DeviceMonitor) envCtx.lookup("states/DeviceMonitorFactory");
 		deviceMonitor.setOutdated(true);
 		} catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of DeviceMonitorFactory");
+        	System.out.println(Notifications.EXCEP_DEVICEMONITOR_CONTEXT + "Init Servlet (POST)");
 			e.printStackTrace();
 		}
 	}

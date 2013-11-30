@@ -3,13 +3,13 @@
  * accounted in the checksum, therefore the air conditioner
  * can work in all possible combinations of those parameters
  * mentioned before.
- * There must be some advices when trying to compose a more 
- * complete message, such as:
+ * There are some advices when trying to compose a more 
+ * complete message (i.e.: adding timer functionality), such as:
  * - The message itself is on a inverted bit logic. For instance,
  * Marker Code M1 represents 0x14 hex number, which is B00101000.
- * But the message itself sends a inverted B11010111 word.
- * Just make sure all bits are inverted before making arithmetical
- * operations.
+ * But the message itself sends a inverted             B11010111 
+ * word. Just make sure all bits are inverted before making 
+ * arithmetical operations.
  * - The checksum word is NOT inverted. Notice that if the message 
  * is one bit different from what it should be, it won't work.
  * - Almost sure BITOnTime should be 1200 and BITOfftime should be
@@ -72,7 +72,6 @@ byte messageOff[7][8] = {
     {1, 0, 1, 1, 1, 1, 1, 1}, // off command
     {0, 1, 0, 0, 0, 0, 0, 0} // checksum
 };
-boolean once = false;
 
 void setup()
 {
@@ -153,6 +152,14 @@ boolean wasButtonPressed()
 	return pressed;
 }
 
+/**
+ * The messsage is a rf-coded string, which is received
+ * and processed by the rf lib. It has the format
+ * (no blank spaces): 
+ *      J            T              M          S
+ *   turn on   temperature        mode       speed
+ *                (2-E)            (0-3)     (0-4)
+ */
 boolean wasMessageReceived()
 {
 	uint8_t buf[VW_MAX_MESSAGE_LEN] = "";

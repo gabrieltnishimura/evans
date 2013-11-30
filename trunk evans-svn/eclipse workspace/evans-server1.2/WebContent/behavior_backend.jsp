@@ -25,6 +25,20 @@
 		    });
 		  });
 		});
+		
+		function nodeExecution(name, reset) {
+			$.ajax({
+				type: "POST",  
+				url: "BehaviorExecution",  
+				data: {
+					name: name,
+					reset: reset
+				},
+				success: function(e) {
+					
+				}
+			});
+		}
 		</script>
 	</head>
 
@@ -40,7 +54,7 @@
 					      		</a>
 					   			<ul>
 					   				<c:forEach items="${parents.childs}" var="childs">
-						    	    	<li><a href="javascript:void(0)" onclick="$.ajax({type:'GET',url:'${childs.link}'});" 
+						    	    	<li><a href="javascript:void(0)" onclick="nodeExecution('${childs.name}', '0');" 
 						    	    	style="cursor: pointer;" >${childs.name}</a></li>
 					    	    	</c:forEach>
 					    			<li><a href="javascript:void(0)" onclick="addNode();" >+ add node</a></li>

@@ -13,6 +13,7 @@ import br.com.evans.devices.arduino.AirConditioner;
 import br.com.evans.devices.arduino.RfCoded;
 import br.com.evans.devices.core.Device;
 import br.com.evans.jndi.states.DeviceMonitor;
+import br.com.evans.notifications.core.Notifications;
 import br.com.evans.servlets.core.ServletUtilities;
 import net.sf.json.JSONException;
  
@@ -51,7 +52,7 @@ public class SpeechRecognitionHandling extends HttpServlet {
 	    			response.getWriter().write(deviceMonitor.createJsonMap());
 				}
         } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of ArduinoFactory");
+        	System.out.println(Notifications.EXCEP_ARDUINO_CONTEXT);
 			e.printStackTrace();
 		}
 	}
@@ -71,7 +72,7 @@ public class SpeechRecognitionHandling extends HttpServlet {
 			
 			Device device = deviceMonitor.getDevice(recognitionString);
 			if (device != null && (device instanceof RfCoded || device instanceof AirConditioner)) { // switch states if the hashmap returns a valid RfCoded device
-				System.out.println("[STATUS]: device exists, switching it's state");
+				System.out.println(Notifications.NOTIF_SWITCHING_STATES_DEVICE);
 				device.switchStates();
 
 				response.setContentType("application/json");
@@ -81,11 +82,11 @@ public class SpeechRecognitionHandling extends HttpServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NamingException e) {
-			System.out.println("[EXCEPTION] Problem when trying to load the context of DeviceMonitorFactory");
+			System.out.println(Notifications.EXCEP_DEVICEMONITOR_CONTEXT);
 			e.printStackTrace();
 		} catch (JSONException jse) {
 			response.setContentType("application/text");
-			response.getWriter().write("[EXCEPTION] Problem when inserting data to the JSON Object");
+			response.getWriter().write(Notifications.EXCEP_JSON_INSERT);
 		}
 
 //		response.setContentType("application/text");

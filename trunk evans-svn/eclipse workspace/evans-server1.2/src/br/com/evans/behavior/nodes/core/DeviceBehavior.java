@@ -5,6 +5,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 
 import br.com.evans.command.repository.CommandRepository;
+import br.com.evans.notifications.core.Notifications;
 
 public class DeviceBehavior extends BehaviorNode {
 	CommandRepository repository;
@@ -25,11 +26,11 @@ public class DeviceBehavior extends BehaviorNode {
 		} else if (parameters.size() == 1 && parameters.get(0).equals("off")) {
 			this.repository = new CommandRepository();
 			this.repository.proccesNode(super.getName(), false);
-		} else if (parameters.isEmpty()) {
+		} else if (parameters.isEmpty()) { // testing purposes
 			this.repository = new CommandRepository();
 			this.repository.proccesNode(super.getName());
 		} else {
-			System.out.println("[ERROR] [DeviceBehavior] No valid parameters were passed.");
+			System.out.println(Notifications.ERROR_NO_VALID_PARAM);
 		}
 	}
 	

@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 
 import br.com.evans.jndi.arduino.ArduinoConnection;
 import br.com.evans.jndi.states.DeviceMonitor;
+import br.com.evans.notifications.core.Notifications;
 
 public class RfCoded extends ArduinoDevice {
 	String rfId;
@@ -58,7 +59,7 @@ public class RfCoded extends ArduinoDevice {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of ArduinoFactory or DeviceMonitorFactory");
+        	System.out.println(Notifications.EXCEP_ARDUINO_OR_DEVICEMONITOR_CONTEXT);
 			e.printStackTrace();
 		}
 	}
@@ -85,7 +86,7 @@ public class RfCoded extends ArduinoDevice {
 			deviceMonitor.setOutdated(true); // notify reverseAjax
 			
 		} catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of ArduinoFactory or DeviceMonitorFactory");
+        	System.out.println(Notifications.EXCEP_ARDUINO_OR_DEVICEMONITOR_CONTEXT);
 			e.printStackTrace();
 		}
 	}

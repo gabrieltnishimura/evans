@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.evans.jndi.states.DeviceMonitor;
+import br.com.evans.notifications.core.Notifications;
 
 import java.io.IOException;
 import java.util.Queue;
@@ -68,7 +69,7 @@ public class ReverseAjax extends HttpServlet {
 				} catch (IOException e) {
 					throw new RuntimeException(e.getMessage(), e);
 				}  catch (NamingException e) {
-		        	System.out.println("[EXCEPTION] Problem when trying to load the context of DeviceMonitorFactory");
+		        	System.out.println(Notifications.EXCEP_DEVICEMONITOR_CONTEXT + "couldn't reverse ajax");
 					e.printStackTrace();
 				}
 			}

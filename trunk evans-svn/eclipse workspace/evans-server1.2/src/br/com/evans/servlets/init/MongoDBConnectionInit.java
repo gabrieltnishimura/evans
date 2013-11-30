@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.com.evans.notifications.core.Notifications;
+
 /**
  * Servlet implementation class ArduinoInit
  */
@@ -28,7 +30,7 @@ public class MongoDBConnectionInit extends HttpServlet {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 			envCtx.lookup("db/MongoDBConnectionFactory"); // init mongo connection
         } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of MongoDBConnetion");
+        	System.out.println(Notifications.EXCEP_MONGODB_CONTEXT + "in initializing servlet");
 			e.printStackTrace();
 		}
     }

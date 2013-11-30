@@ -2,15 +2,18 @@ package br.com.evans.filemanager.basic;
 import java.io.File;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import org.bson.types.ObjectId;
 
-import br.com.evans.security.encryption.Digest;
+import org.bson.types.ObjectId;
+import org.jongo.Jongo;
+import org.jongo.MongoCollection;
+
+import br.com.evans.dao.musics.MusicObject;
 
 public class FileIterator {
 	private static String mainDir;
@@ -27,16 +30,18 @@ public class FileIterator {
 	public static void iterateThroughMainDir() {
 		File dir = new File(mainDir);
 		nameList = new ArrayList<String>();
-		Digest digest = new Digest();
+		//Digest digest = new Digest();
 		
 		if (dir.isDirectory()) {
-			DBCollection coll = null;
-			BasicDBObject doc = null;
+			MongoCollection jongoColl = null;
 			
 			try {
 				Mongo mongoClient = new Mongo( ADDRESS , PORT );
 				DB database = mongoClient.getDB( DATABASE );
-				coll = database.getCollection( COLLECTION );
+				
+				Jongo j = new Jongo(database);
+				jongoColl = j.getCollection( COLLECTION );
+				
 				System.out.println("[STATUS] Created MongoDB connection.");
 			} catch (UnknownHostException e) {
 				System.out.println("[EXCEPTION] Couldn't create MongoDB connection");
@@ -52,11 +57,12 @@ public class FileIterator {
 					nameList.add(child.getName());
 					String name;
 					String dirName = mainDir + "\\" + child.getName();
-					String md5 = digest.digestmd5(dirName); // must be unique
+//					String md5 = digest.digestmd5(dirName); // must be unique
 //					System.out.println(md5);
 							
 					if (!child.getName().contains("-")) {
 						name = child.getName().substring(child.getName().indexOf(" "), child.getName().indexOf(".mp3"));
+						name = name.trim();
 						if (!child.getName().contains(".")) {
 							System.out.println("String has no '-' and has a '.'");
 						}
@@ -65,12 +71,10 @@ public class FileIterator {
 													 child.getName().indexOf(".mp3"));
 					}
 					
-					ObjectId id = new ObjectId(); // uniqueness => db.evans.ensureIndex({directory:1}, {unique, true})s
+					MusicObject music = new MusicObject(name, dirName);
+					jongoColl.save(music);
 					
-					doc = new BasicDBObject("_id", id).append("name", name).append("directory", dirName);
-					coll.insert(doc); /*persist!*/
-					
-						System.out.println("["+ i++ +"]Added: ("+name+") with [" +md5+ "]"+ "on\n" + dirName);
+						System.out.println("["+ i++ +"]Added: ("+name+")" + "on\n" + dirName);
 						System.out.print("also, this file is a mp3 file \n");
 				}
 			}
@@ -92,6 +96,20 @@ public class FileIterator {
 		mainDir = "C:\\Users\\Gcats\\Music";
 		mainDir = "F:\\Music\\Anime\\Kimi to Boku 2";
 		iterateThroughMainDir();
+		
+		DB db;
+		try {
+			db = new Mongo().getDB("evans");
+			Jongo jongo = new Jongo(db);
+			MongoCollection friends = jongo.getCollection("musics");
+			Iterable<MusicObject> all = friends.find().as(MusicObject.class);
+			Iterator<MusicObject> it = all.iterator();
+			it.next();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public String getMainDir() {

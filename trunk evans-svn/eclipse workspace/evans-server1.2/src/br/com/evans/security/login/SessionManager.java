@@ -6,6 +6,7 @@ import javax.naming.NamingException;
 import javax.servlet.http.HttpSession;
 
 import br.com.evans.jndi.db.MongoDBConnection;
+import br.com.evans.notifications.core.Notifications;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -34,7 +35,7 @@ public class SessionManager {
 			collection.update(query, sessionInfo);
 			
         } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of MongoDBFactory, couldn't query for user");
+        	System.out.println(Notifications.EXCEP_MONGODB_CONTEXT + "couldn't query for user");
 			e.printStackTrace();
 		}
 	}
@@ -59,11 +60,11 @@ public class SessionManager {
 					valid = true;
 				}
 			} else {
-				System.out.println("[ERROR] There is no such user on the database. There is no such valid session.");
+				System.out.println(Notifications.ERROR_NO_SUCH_USER_INVALID_SESSION);
 			}
 			
         } catch (NamingException e) {
-        	System.out.println("[EXCEPTION] Problem when trying to load the context of MongoDBFactory, couldn't query for user");
+        	System.out.println(Notifications.EXCEP_MONGODB_CONTEXT + "couldn't query for user");
 			e.printStackTrace();
 		}
 		

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.com.evans.behavior.nodes.core.BehaviorNode;
 import br.com.evans.behavior.nodes.manager.BehaviorNodeManager;
+import br.com.evans.notifications.core.Notifications;
 
 /**
  * Servlet implementation class BehaviorNavigator
@@ -43,15 +44,14 @@ public class BehaviorNavigator extends HttpServlet {
 			this.nodeManager.navigateToParent();
 		} else {
 			String name = request.getParameter("name").toLowerCase();
-			System.out.println("Trying to switch " + name);
 			BehaviorNodeManager auxiliaryBehavior = new BehaviorNodeManager();
-			System.out.println(auxiliaryBehavior.createJsonMap());
+			//System.out.println(auxiliaryBehavior.createJsonMap());
 			auxiliaryBehavior.getParent();
 			BehaviorNode node = BehaviorNode.searchForChild(name, auxiliaryBehavior.getParent());
 			if (node != null) {
-				node.execute(new ArrayList<String>());
+				node.execute(new ArrayList<String>()); // execute node instruction
 			} else {
-				System.out.println("Test");
+				System.out.println(Notifications.ERROR_NON_EDGE_EXECUTION);
 			}
 		}
 	}
@@ -77,10 +77,10 @@ public class BehaviorNavigator extends HttpServlet {
 				response.getWriter().write(jsonResponse);
 				response.getWriter().flush();
 			} else {
-				System.out.println("[ERROR] Couldn't find the desired destination.");
+				System.out.println(Notifications.ERROR_INVALID_NODE);
 			}
 		} else {
-			System.out.println("[ERROR] The desired destination is blank.");
+			System.out.println(Notifications.ERROR_DESTINATION_BLANK);
 		}
 	}
 }

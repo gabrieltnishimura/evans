@@ -7,7 +7,9 @@ import javax.naming.NamingException;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 
+import br.com.evans.jdni.music.MusicPlayer;
 import br.com.evans.jndi.db.MongoDBConnection;
+import br.com.evans.notifications.core.Notifications;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -19,7 +21,7 @@ public class JNDIManager {
 			Context envCtx = (Context)  new InitialContext().lookup("java:comp/env");
 			return ((MongoDBConnection) envCtx.lookup("db/MongoDBConnectionFactory")).getCollection(collectionName);
 		} catch (NamingException e) {
-			System.out.println("[EXCEPTION] Problem when trying to load the context of MongoDBFactory, couldn't return collection");
+			System.out.println(Notifications.EXCEP_MONGODB_CONTEXT + "couldn't return collection");
 			e.printStackTrace();
 			return null;
 		}
@@ -30,7 +32,18 @@ public class JNDIManager {
 			Context envCtx = (Context)  new InitialContext().lookup("java:comp/env");
 			return new Jongo((DB) ((MongoDBConnection) envCtx.lookup("db/MongoDBConnectionFactory")).getMongoDB()).getCollection(collectionName);
 		} catch (NamingException e) {
-			System.out.println("[EXCEPTION] Problem when trying to load the context of MongoDBFactory, couldn't return jongo collection");
+			System.out.println(Notifications.EXCEP_MONGODB_CONTEXT + "couldn't return jongo collection");
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static MusicPlayer getMusicPlayer() {
+		try {
+			Context envCtx = (Context)  new InitialContext().lookup("java:comp/env");
+			return (MusicPlayer) envCtx.lookup("music/MusicPlayerFactory");
+		} catch (NamingException e) {
+			System.out.println(""); //@todo error message
 			e.printStackTrace();
 			return null;
 		}

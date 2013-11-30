@@ -57,12 +57,11 @@ public class Login extends HttpServlet {
 			}
 			SessionManager.updateLastSessionInfo(user, session);
 			
-			System.out.println(session.toString());
 			response.sendRedirect(request.getServletContext().getInitParameter("server-hostname") + 
 					request.getContextPath() + "/index.html"); // loggedPage
 			return;
 		} else {
-			System.out.println("[LOGIN]Wrong username or password.");
+			System.out.println("[LOGIN] Wrong username or password.");
 	        request.setAttribute("wrongPw", "1");
 			//response.sendRedirect("http://localhost:8080"+request.getContextPath()+"/login.jsp"); // login
 			request.getRequestDispatcher("/login.jsp").forward(request, response);

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import br.com.evans.notifications.core.Notifications;
 import br.com.evans.security.login.CookieManager;
 
 /**
@@ -35,7 +36,7 @@ public class Logoff extends HttpServlet {
 		if (session != null)
 			session.invalidate();
 		
-		System.out.println("User logged off. Redirecting it to Login page.");
+		System.out.println(Notifications.NOTIF_LOGOFF_REDIR);
 		
 		response.sendRedirect(request.getServletContext().getInitParameter("server-hostname") + 
 				request.getContextPath()+"/login.jsp"); // login
@@ -54,7 +55,7 @@ public class Logoff extends HttpServlet {
 		
 		CookieManager.deleteUserCookie(request);
 		
-		System.out.println("User logged off. Redirecting it to Login page.");
+		System.out.println(Notifications.NOTIF_LOGOFF_REDIR);
 		
 		response.sendRedirect(request.getServletContext().getInitParameter("server-hostname") + 
 				request.getContextPath()+"/login.jsp"); // login

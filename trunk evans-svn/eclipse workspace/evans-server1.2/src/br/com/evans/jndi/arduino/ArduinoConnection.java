@@ -10,6 +10,7 @@ import javax.naming.InitialContext;
 
 import br.com.evans.devices.arduino.AirConditioner;
 import br.com.evans.jndi.states.DeviceMonitor;
+import br.com.evans.notifications.core.Notifications;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
@@ -61,7 +62,7 @@ public enum ArduinoConnection implements SerialPortEventListener {
 		}
 
 		if (portId == null) {
-			System.out.println("Couldn't find COM3 port.");
+			System.out.println(Notifications.ERROR_FIND_PORT + PORT_NAMES[0]);
 			return;
 		}
 
@@ -77,9 +78,8 @@ public enum ArduinoConnection implements SerialPortEventListener {
 					SerialPort.PARITY_NONE);
 
 			// open the streams
-//			System.out.println("[STATUS] Created Arduino Serial Input (singleton)");
 			input = serialPort.getInputStream();
-			System.out.println("[STATUS] Created Arduino Serial Output (singleton)");
+			System.out.println(Notifications.NOTIF_CREATED_ARDUINO_SINGLETON);
 			output = serialPort.getOutputStream();
 			
 			// add event listeners
@@ -95,7 +95,7 @@ public enum ArduinoConnection implements SerialPortEventListener {
 	 * can read it using Serial.available()
 	 */
 	public void writeInOutput(String string) throws IOException {
-		System.out.println("[SERIAL] Sending bytes over serial port");
+		System.out.println(Notifications.SERIAL_SENDING + string);
 		byte[] stringByteArray = string.getBytes("UTF-8");
 		output.write(stringByteArray);
 	}
@@ -112,7 +112,7 @@ public enum ArduinoConnection implements SerialPortEventListener {
 	}
 
 	/**
-	 * Handle an event on the serial port. Read the data and print it.
+	 * Handle an event on the serial port. Read the data and print/use it.
 	 */
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
@@ -150,7 +150,7 @@ public enum ArduinoConnection implements SerialPortEventListener {
         try { /* wait until transmission has ended*/
             Thread.sleep(intWaitTime);
         } catch (InterruptedException ex) {
-        	System.out.println("Exception on thread sleeping");
+        	System.out.println(Notifications.EXCEP_SLEEP + "ArduinoConnection");
         }
 
         byte[] buffer = new byte[input.available()];
