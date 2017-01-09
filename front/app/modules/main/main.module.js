@@ -8,9 +8,8 @@
             ],
             declarations: [
                 app.MainComponent,
-                app.EdHeaderComponent,
-                app.EdIconComponent,
-                app.EdSearchBarComponent
+                app.EvansHeader,
+                app.EvansFooter
             ],
             bootstrap: [
                 app.MainComponent
