@@ -1,0 +1,9 @@
+node_modules
+app/bower_components
+.idea
+reports
+front/node_modules
+*templates.js
+.protractor-failed
+app/deploy/
+npm-debug.log
