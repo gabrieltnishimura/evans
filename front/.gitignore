@@ -7,3 +7,5 @@ front/node_modules
 .protractor-failed
 app/deploy/
 npm-debug.log
+modules/ts/*.map
+modules/ts/*.js

@@ -34,28 +34,24 @@
     <!-- END HEAD -->
 
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
-        <layout>Carregando...</layout>
+        <evans>Carregando...</evans>
         <!-- BEGIN CORE ANGULARJS PLUGINS -->
         <script src="node_modules/core-js/client/shim.min.js"></script>
-        <script src="node_modules/zone.js/dist/zone.min.js"></script>
-        <script src="node_modules/rxjs/bundles/Rx.min.js"></script>
-        <script src="node_modules/@angular/core/bundles/core.umd.min.js"></script>
-        <script src="node_modules/@angular/common/bundles/common.umd.min.js"></script>
-        <script src="node_modules/@angular/compiler/bundles/compiler.umd.min.js"></script>
-        <script src="node_modules/@angular/platform-browser/bundles/platform-browser.umd.min.js"></script>
-        <script src="node_modules/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.min.js"></script>
-        <script src="node_modules/@angular/forms/bundles/forms.umd.min.js"></script>
-        <script src="node_modules/@angular/http/bundles/http.umd.js"></script>
+        <script src="node_modules/zone.js/dist/zone.js"></script>
+        <script src="node_modules/systemjs/dist/system.src.js"></script>
+        <script src="systemjs.config.js"></script>
+        <script src="app/modules/ts/app.js"></script>
         <!-- END CORE ANGULARJS PLUGINS -->
         <!-- BEGIN APP LEVEL ANGULARJS SCRIPTS -->
-        <script src="app/modules/app.js"></script>
 
-        <script src="app/modules/main/components/layout/layout.js"></script>
-        <script src="app/modules/main/components/evans-header/evans-header.js"></script>
-        <script src="app/modules/main/components/evans-footer/evans-footer.js"></script>
-
-        <script src="app/modules/main/main.module.js"></script>
         <!-- END APP LEVEL ANGULARJS SCRIPTS -->
+
+        <script src="app/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script src="app/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="app/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+        <script src="app/assets/global/scripts/app.min.js" type="text/javascript"></script>
+        <script src="app/assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
+
         <!-- END JAVASCRIPTS -->
     </body>
 </html>
