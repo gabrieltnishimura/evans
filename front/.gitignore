@@ -8,3 +8,5 @@ front/node_modules
 app/deploy/
 npm-debug.log
 system-config.js*
+app/modules/ts/**/*.js
+app/modules/ts/**/*.map
