@@ -25,6 +25,7 @@ export class LoginComponent {
     //submitted = false;
     login() {
         //this.submitted = true;
+        this.userService.login(this.model.username, this.model.password);
         console.log('submitted!');
     }
     get diagnostic() { return JSON.stringify(this.model); }

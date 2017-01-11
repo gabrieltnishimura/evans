@@ -16,11 +16,12 @@ export class UserService {
     headers.append('Content-Type', 'application/json');
 
     if (email === "1234" && password === "1234") {
+        console.log('the user is now logged!');
         return true;
     }
-
+    console.log('wrong username/password combination');
     return false;
-    
+
     /*return this.http
       .post(
         'localhost:9001/api/authenticate',

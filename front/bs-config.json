@@ -1,0 +1,10 @@
+{
+    "files": [ "./**/*.{html,htm,css,js}" ],
+    "server" : { "baseDir" : "./" },
+    "online": false,
+    "injectChanges": false,
+    "watchOptions": {
+        "ignoreInitial": true,
+        "ignored": ["node_modules"]
+    }
+}

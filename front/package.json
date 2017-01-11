@@ -39,7 +39,7 @@
 
     "@types/node": "^6.0.46",
     "@types/jasmine": "^2.5.36"
-  },  
+  },
   "scripts": {
     "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
     "e2e": "tsc && concurrently \"http-server -s\" \"protractor protractor.config.js\" --kill-others --success first",
