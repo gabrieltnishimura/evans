@@ -18,10 +18,37 @@ app.use(function (req, res, next) {
     next();
 });
 
-// app.get('/', function (req, res) {
-//     return res.redirect('/portal');
-// });
+// Public route
+app.get('/api/deals/public', function (req, res) {
+  var deals = [
+	{
+		id: 1234,
+		name: 'Name of Product',
+		description: 'Description of Product',
+		originalPrice: 19.99, // Original price of product
+		salePrice: 9.99 // Sale price of product
+	}
+  ];
+  res.json(deals);
+});
+// Private route 
+app.get('/api/deals/private', function (req, res) {
+  var deals = [
+	{
+		id: 5555,
+		name: 'Name of Product',
+		description: 'Description of Product',
+		originalPrice: 19.99, // Original price of product
+		salePrice: 9.99 // Sale price of product
+	}
+  ];
+  res.json(deals);
+});
 
+app.post('/api/authenticate', function (req, res) {
+	console.log(req.body);
+	res.json({logged: true});
+});
 app.use(compression());
 
 app.use('/', express.static(path.resolve(path.join(__dirname, deployFolder))));

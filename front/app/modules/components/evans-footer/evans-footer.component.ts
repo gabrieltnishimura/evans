@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'evans-footer',
-  templateUrl: 'app/modules/ts/components/evans-footer/evans-footer.html',
+  templateUrl: 'app/modules/components/evans-footer/evans-footer.html',
 })
-export class EvansFooter  {
+export class EvansFooterComponent  {
     constructor() {
         console.log("heyo from evans footer");
     }
